@@ -4,7 +4,7 @@ import App from './App';
 import Home from './pages/Home';
 import Search from './pages/Search';
 
-function Routes() {
+const routes = function Routes() {
   return (
 
     <Switch>
@@ -15,4 +15,4 @@ function Routes() {
   )
 }
 
-export default Routes;
+export default routes;
