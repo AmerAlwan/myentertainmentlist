@@ -36,12 +36,17 @@ class SearchBar extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        movies: null,
+        loading: false,
         value: ''
       };
+      this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
 
   search = async val => {
+    this.setState({loading: true});
+  //  console.log(val);
     const res = await search (
       `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb`
     );
@@ -50,9 +55,9 @@ class SearchBar extends Component {
   //  this.setState({libraries: movies, loading: false})
   var results = [];
   for(let i = 0; i < movies.length; i++) {
-    results.push({value: movies[i].id, label: <Media data={movies[i]}/>});
+    results.push({value: movies[i].id ? movies[i].title : movies[i].name, label: <Media data={movies[i]}/>});
   }
-  console.log(results);
+  //console.log(results);
   return results;
   };
 
@@ -60,6 +65,11 @@ class SearchBar extends Component {
     return this.search(inputValue);
   };
 
+
+  onChangeHandler = async e => {
+    //this.search(e.value);
+    this.setState({value: e.value});
+  };
 
   // get renderMovies() {
   //   let movies = "<h1> There's no movies </h1>";
@@ -80,6 +90,7 @@ class SearchBar extends Component {
           cacheOptions
           placeholder="Search Media..."
           loadOptions={this.loadOptions}
+          onInputChange={this.onChangeHandler}
           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           />
       </div>
