@@ -2,13 +2,31 @@ import React, { Component } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios';
 import AsyncSelect from 'react-select/async';
+import { search } from './util.js';
+import Media from './Media';
+import './SearchBar.css'
 
-const reactSelectStyles = {
-  control: base => ({
-    width: 500,
-    height:100
+const reactSelectStyles = () => {
+  return {
+  container: base => ({
+    ...base,
+    width: '300px',
+    display: 'inline-block'
   })
 }
+}
+
+const formControlFix = {
+  width: 'auto',
+  display: 'inline-block'
+};
+
+const searchButton = {
+  marginBottom: '0.3rem'
+};
+
+const posterPath = 'https://image.tmdb.org/t/p/original/';
+
 
 class SearchBar extends Component {
 
@@ -28,18 +46,18 @@ class SearchBar extends Component {
 
   search = async val => {
     this.setState({loading: true});
-    console.log(val);
-    const res = await axios (
-      `https://api.themoviedb.org/3/search/movie?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb`
+  //  console.log(val);
+    const res = await search (
+      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb`
     );
-    const movies = await res.data.results;
+    const movies = res;
     console.log(movies);
   //  this.setState({libraries: movies, loading: false})
   var results = [];
   for(let i = 0; i < movies.length; i++) {
-    results.push({label: movies[i].original_title, value: movies[i].original_title});
+    results.push({value: movies[i].id ? movies[i].title : movies[i].name, label: <Media data={movies[i]}/>});
   }
-  console.log(results);
+  //console.log(results);
   return results;
   };
 
@@ -66,11 +84,16 @@ class SearchBar extends Component {
   return (
 
       <>
+      <div className='react-select-container'>
         <AsyncSelect
-          style={{width:'200px'}}
+          style={formControlFix}
           cacheOptions
+          placeholder="Search Media..."
           loadOptions={this.loadOptions}
-          onInputChange={this.onChangeHandler}/>
+          onInputChange={this.onChangeHandler}
+          components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+          />
+      </div>
 
 
 
