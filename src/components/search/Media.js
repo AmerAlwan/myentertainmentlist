@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
-import { search } from './util.js';
 
 class Media extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {coverPhoto: ''};
     this.data = this.props.data;
     this.data.overview = this.data.overview ? this.data.overview : '';
     this.data.overview = this.data.overview.substring(0, this.data.overview.indexOf(' ', 100)) + ('...' ? this.data.overview : '');
@@ -16,33 +14,22 @@ class Media extends Component {
     this.date = this.data.release_date ? this.data.release_date : this.data.first_air_date;
     this.year = this.date ? this.date.split('-')[0] : '';
     this.title = this.data.title ? this.data.title : this.data.name;
-  //  this.title = this.data.title + (this.year ? ' (' + this.year + ')' : '');
+    //this.title = this.data.title + (this.year ? ' (' + this.year + ')' : '');
   }
 
-  componentDidMount() {
-    this.setState({coverPhoto: this.getCoverPhoto(this.props.data.poster_path)})
-  }
-
-   getCoverPhoto = async (val) => {
-    const res = await search (
-      `https://image.tmdb.org/t/p/original/${val}`
-    );
-    const image = res;
-    return image;
-  };
 
   render() {
     return (
       <>
       <Row>
         <Col xs={3}>
-          <img width='50px' height='72px' src={this.state.coverPhoto}/>
+          <img width='50px' height='72px' src={`https://image.tmdb.org/t/p/original/${this.props.data.poster_path}`}/>
         </Col>
         <Col xs={9}>
           <Row>
             <Col>
               <h6> {this.title}</h6>
-              <p >{this.genres}</p>
+
             </Col>
           </Row>
           <Row>
