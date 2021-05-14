@@ -15,6 +15,7 @@ const makeRequestCreator = () => {
     try {
       if (resources[query]) {
         // Return result if it exists
+        console.log("Returned Exisitng Query");
         return resources[query];
       }
       const res = await axios(query, { cancelToken: cancel.token });

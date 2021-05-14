@@ -7,7 +7,7 @@ class Media extends Component {
   constructor(props) {
     super(props);
     this.data = this.props.data;
-    this.data.overview = this.data.overview ? this.data.overview : '';
+
 
   //  this.data.overview = this.data.overview.substring(0, this.data.overview.indexOf(' ', 100)) + '...';
   }
@@ -31,7 +31,7 @@ class Media extends Component {
           </Row>
           <Row>
             <Col style={{overflow: 'hidden', height: '36px'}}>
-              <p style={{fontSize: '0.5rem'}}> {this.data.overview} </p>
+              <p style={{fontSize: '0.5rem'}}> {this.props.data.overview = this.props.data.overview ? this.props.data.overview : ''} </p>
             </Col>
           </Row>
         </Col>
