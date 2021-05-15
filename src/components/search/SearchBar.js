@@ -10,14 +10,14 @@ const reactSelectStyles = () => {
   return {
   container: base => ({
     ...base,
-    width: '300px',
+    width: '500px',
     display: 'inline-block'
   })
 }
 }
 
 const formControlFix = {
-  width: 'auto',
+  width: '500px',
   display: 'inline-block'
 };
 
