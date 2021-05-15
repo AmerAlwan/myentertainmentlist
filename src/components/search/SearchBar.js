@@ -6,19 +6,9 @@ import { search } from './util.js';
 import Media from './Media';
 import './SearchBar.css'
 
-const reactSelectStyles = () => {
-  return {
-  container: base => ({
-    ...base,
-    width: '500px',
-    display: 'inline-block'
-  })
-}
-}
-
-const formControlFix = {
-  width: '500px',
-  display: 'inline-block'
+const searchBarStyle = {
+  width: '350px',
+  display: 'inline-block',
 };
 
 const searchButton = {
@@ -84,23 +74,17 @@ class SearchBar extends Component {
   return (
 
       <>
-      <div className='react-select-container'>
+      <div style={searchBarStyle}>
         <AsyncSelect
-          style={formControlFix}
+          style={searchBarStyle}
           cacheOptions
           placeholder="Search Media..."
           loadOptions={this.loadOptions}
           onInputChange={this.onChangeHandler}
           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+          controlShouldRenderValue = { false }
           />
       </div>
-
-
-
-      {/*}<Form>
-      *}  <FormControl value={this.state.value} onChange={this.onChangeHandler} style={formControlFix} type="text" placeholder="Search" className="mr-sm-2"/> {' '}
-        <Button variant="outline-dark" type="submit" style={searchButton}>Search</Button>
-      </Form> */}
       </>
   );
 }
