@@ -54,8 +54,8 @@ class SearchBar extends Component {
     console.log(movies);
   //  this.setState({libraries: movies, loading: false})
   var results = [];
-  for(let i = 0; i < movies.length; i++) {
-    results.push({value: movies[i].id ? movies[i].title : movies[i].name, label: <Media data={movies[i]}/>});
+  if (movies) {
+    results = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
   }
   //console.log(results);
   return results;
