@@ -1,7 +1,8 @@
 {
   "config": {
     "keys": {
-      "tmdb": "ce242dc8631f3030059e51dca89df4fb"
+      "tmdb": "ce242dc8631f3030059e51dca89df4fb",
+      "rawg": "c399a3d046b44f4ca5efd92d65429209"
     },
     "links": {
       "tmdb": {
@@ -11,6 +12,12 @@
             "api_key": "&api_key=",
             "include_adult": "&include_adult=",
             "page": "&page="
+          },
+          "image": {
+            "link": "https://image.tmdb.org/t/p",
+            "size": {
+              "w92": "/w92/"
+            }
           }
       }
 
@@ -47,6 +54,9 @@
           "10759": "Action & Adventure"
         }
       }
+    },
+    "images": {
+      "defaultPoster": "./../../images/defaultposter.jpg"
     }
   }
 }

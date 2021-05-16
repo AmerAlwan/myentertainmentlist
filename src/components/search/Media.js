@@ -10,12 +10,13 @@ class Media extends Component {
     super(props);
     //console.log(config.default.config.ids.genres);
     //console.log(this.props.data.poster_path);
+    let cConfig = config.default.config;
     this.state = {
        title: this.validateDefault(this.props.data.title, this.validate(this.props.data.name)),
        date: this.validateAndInclude(this.validateDefault(this.validate(this.props.data.release_date).split('-')[0], this.validate(this.props.data.first_air_date).split('-')[0]), '', ' (', ')'),
        overview: this.validateAndAdd(this.validate(this.props.data.overview).substring(0, Math.max(this.validate(this.props.data.overview).indexOf(' ', 150), 150)), '', this.validate(this.props.data.overview).length >= 150 ? '...' : ''),
-       genres: this.props.data.genre_ids ? this.props.data.genre_ids.map(g => config.default.config.ids.tmdb.genres[g]).join(', ') : '',
-       posterPath: this.props.data.poster_path ? `https://image.tmdb.org/t/p/w92/${this.props.data.poster_path}` : defaultposter
+       genres: this.props.data.genre_ids ? this.props.data.genre_ids.map(g => cConfig.ids.tmdb.genres[g]).join(', ') : '',
+       posterPath: this.props.data.poster_path ? `${cConfig.links.tmdb.image.link + cConfig.links.tmdb.image.size.w92 + this.props.data.poster_path}` : defaultposter
     };
 
 

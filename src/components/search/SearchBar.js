@@ -18,9 +18,6 @@ const searchButton = {
 
 const posterPath = 'https://image.tmdb.org/t/p/original/';
 
-
-//c399a3d046b44f4ca5efd92d65429209
-
 class SearchBar extends Component {
 
 
@@ -40,12 +37,17 @@ class SearchBar extends Component {
   search = async (val, {page}) => {
   //  this.setState({loading: true});
   //  console.log(val);
+    if(!val) return {
+      options: [],
+      hasMore: false,
+      };
     let msConfig = config.default.config.links.tmdb.multisearch;
     const res = await search (
-      `${msConfig.link}${msConfig.api_key}${config.default.config.keys.tmdb}${msConfig.query}${val}${msConfig.page}${page}`
+    `${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`
+  //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
     );
     const movies = res.results;
-    console.log(movies);
+    //console.log(movies);
   //  this.setState({libraries: movies, loading: false})
   var results = [];
   if (movies) {
