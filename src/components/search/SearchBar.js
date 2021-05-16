@@ -5,6 +5,7 @@ import { AsyncPaginate } from 'react-select-async-paginate';
 import { search } from './util.js';
 import Media from './Media';
 import './SearchBar.css'
+import * as config from './config.json';
 
 const searchBarStyle = {
   width: '350px',
@@ -39,8 +40,9 @@ class SearchBar extends Component {
   search = async (val, {page}) => {
   //  this.setState({loading: true});
   //  console.log(val);
+    let msConfig = config.default.config.links.tmdb.multisearch;
     const res = await search (
-      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb&include_adult=false&page=${page}`
+      
     );
     const movies = res.results;
     console.log(movies);
