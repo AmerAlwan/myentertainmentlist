@@ -10,7 +10,7 @@
             "query": "&query=",
             "api_key": "&api_key=",
             "include_adult": "&include_adult=",
-            "page": "&page"
+            "page": "&page="
           }
       }
 

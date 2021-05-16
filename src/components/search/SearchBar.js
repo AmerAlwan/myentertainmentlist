@@ -42,7 +42,7 @@ class SearchBar extends Component {
   //  console.log(val);
     let msConfig = config.default.config.links.tmdb.multisearch;
     const res = await search (
-      
+      `${msConfig.link}${msConfig.api_key}${config.default.config.keys.tmdb}${msConfig.query}${val}${msConfig.page}${page}`
     );
     const movies = res.results;
     console.log(movies);
