@@ -9,7 +9,7 @@ class Media extends Component {
   constructor(props) {
     super(props);
     //console.log(config.default.config.ids.genres);
-    console.log(this.props.data.poster_path);
+    //console.log(this.props.data.poster_path);
     this.state = {
        title: this.validateDefault(this.props.data.title, this.validate(this.props.data.name)),
        date: this.validateAndInclude(this.validateDefault(this.validate(this.props.data.release_date).split('-')[0], this.validate(this.props.data.first_air_date).split('-')[0]), '', ' (', ')'),
@@ -46,7 +46,7 @@ class Media extends Component {
           <Row>
             <Col>
               <span style={{fontSize: '0.8rem'}}> {this.state.title + this.state.date}</span>
-              <p style={{fontSize: '0.6rem'}}>{this.state.genres}</p>
+              <p style={{fontSize: '0.6rem', color: 'grey'}}>{this.state.genres}</p>
           </Col>
           </Row>
           <Row>

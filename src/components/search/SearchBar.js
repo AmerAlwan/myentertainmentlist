@@ -38,7 +38,7 @@ class SearchBar extends Component {
     this.setState({loading: true});
   //  console.log(val);
     const res = await search (
-      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb`
+      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb&include_adult=false`
     );
     const movies = res;
     console.log(movies);

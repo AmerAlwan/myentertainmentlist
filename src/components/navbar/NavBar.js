@@ -12,7 +12,7 @@ class NavBar extends Component {
     <>
 
 
-        <Navbar bg='dark' variant='dark' expand="lg" collapseOnSelect>
+        <Navbar bg='dark' variant='dark'collapseOnSelect>
           <Container fluid>
           <Navbar.Collapse id="basic-navbar-nav">
           <Navbar.Brand as={Link} to='/'>myEList</Navbar.Brand>
