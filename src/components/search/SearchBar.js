@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, FormControl, Button } from 'react-bootstrap'
 import axios from 'axios';
-import AsyncSelect from 'react-select/async';
+import { AsyncPaginate } from 'react-select-async-paginate';
 import { search } from './util.js';
 import Media from './Media';
 import './SearchBar.css'
@@ -17,6 +17,8 @@ const searchButton = {
 
 const posterPath = 'https://image.tmdb.org/t/p/original/';
 
+
+//c399a3d046b44f4ca5efd92d65429209
 
 class SearchBar extends Component {
 
@@ -34,13 +36,13 @@ class SearchBar extends Component {
     }
 
 
-  search = async val => {
-    this.setState({loading: true});
+  search = async (val, {page}) => {
+  //  this.setState({loading: true});
   //  console.log(val);
     const res = await search (
-      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb&include_adult=false`
+      `https://api.themoviedb.org/3/search/multi?query=${val}&api_key=ce242dc8631f3030059e51dca89df4fb&include_adult=false&page=${page}`
     );
-    const movies = res;
+    const movies = res.results;
     console.log(movies);
   //  this.setState({libraries: movies, loading: false})
   var results = [];
@@ -48,11 +50,17 @@ class SearchBar extends Component {
     results = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
   }
   //console.log(results);
-  return results;
+  return {
+    options: results,
+    hasMore: res.page < res.total_pages,
+    additional: {
+      page: page + 1,
+    }
+  };
   };
 
-  loadOptions = (inputValue, callback) => {
-    return this.search(inputValue);
+  loadOptions = (inputValue, loadedOptions, { page }) => {
+    return this.search(inputValue, { page });
   };
 
 
@@ -75,7 +83,7 @@ class SearchBar extends Component {
 
       <>
       <div style={searchBarStyle}>
-        <AsyncSelect
+        <AsyncPaginate
           style={searchBarStyle}
           cacheOptions
           placeholder="Search Media..."
@@ -83,6 +91,7 @@ class SearchBar extends Component {
           onInputChange={this.onChangeHandler}
           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           controlShouldRenderValue = { false }
+          additional={{page:1}}
           />
       </div>
       </>
