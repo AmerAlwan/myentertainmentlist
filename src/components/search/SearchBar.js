@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Form, FormControl, Button } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import axios from 'axios';
-import { AsyncPaginate } from 'react-select-async-paginate';
+import { AsyncPaginate, wrapMenuList} from 'react-select-async-paginate';
+import { components } from 'react-select';
 import { search } from './util.js';
 import Media from './Media';
 import Game from './Game';
@@ -9,7 +10,7 @@ import './SearchBar.css'
 import * as config from './config.json';
 
 const searchBarStyle = {
-  width: '350px',
+  width: '700px',
   display: 'inline-block',
 };
 
@@ -18,6 +19,52 @@ const searchButton = {
 };
 
 const posterPath = 'https://image.tmdb.org/t/p/original/';
+
+const myMenu = props => {
+  console.log(props)
+  return (
+    <>
+      <components.MenuList className="row" {...props}>
+        {props.children}
+      </components.MenuList>
+    </>
+  )
+}
+
+const myGroup = props => {
+  console.log(props)
+  return (
+    <>
+    <Col xs={6}>
+      <components.Group {...props}></components.Group>
+    </Col>
+    </>
+  )
+}
+
+//
+// const myOptions = props => {
+//
+//   console.log(props)
+// //  console.log(innerRef)
+//   //console.log(innerProps)
+//   return (
+//     <>
+//     <Row>
+//       <Col xs={6}>
+//         <AsyncPaginate.GroupHeading>
+//           props.options[0].label
+//         </AsyncPaginate.GroupHeading>
+//       </Col>
+//       <Col xs={6}>
+//         <AsyncPaginate.GroupHeading>
+//           props.options[0].label
+//         </AsyncPaginate.GroupHeading>
+//       </Col>
+//     </Row>
+//       </>
+//     );
+// }
 
 class SearchBar extends Component {
 
@@ -52,7 +99,7 @@ class SearchBar extends Component {
 
   let gConfig = config.default.config.links.rawg.list;
   const resGames = await search (
-  `${gConfig.link + gConfig.api_key + config.default.config.keys.rawg + gConfig.search + val + gConfig.page + page + gConfig.page_size + 5}`
+  `${gConfig.link + gConfig.api_key + config.default.config.keys.rawg + gConfig.search + val + gConfig.page + page + gConfig.page_size + 20}`
   );
   const games = resGames.results;
     //console.log(movies);
@@ -105,6 +152,8 @@ class SearchBar extends Component {
     this.setState({value: e.value});
   };
 
+
+
   // get renderMovies() {
   //   let movies = "<h1> There's no movies </h1>";
   //   if(this.state.movies) {
@@ -118,6 +167,7 @@ class SearchBar extends Component {
   return (
 
       <>
+      <Row>
       <div style={searchBarStyle}>
         <AsyncPaginate
           style={searchBarStyle}
@@ -125,14 +175,12 @@ class SearchBar extends Component {
           placeholder="Search Media..."
           loadOptions={this.loadOptions}
           onInputChange={this.onChangeHandler}
-          components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+          components={{ Group: myGroup, MenuList: wrapMenuList(myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           controlShouldRenderValue = { false }
           additional={{page:1}}
-          menuIsOpen = {true}
-          closeOnSelect = {false}
-          onBlur = {() => {}}
           />
       </div>
+    </Row>
       </>
   );
 }
