@@ -24,8 +24,9 @@
         "list": {
           "link": "https://api.rawg.io/api/games?",
           "api_key": "&key=",
-          "query": "&search=",
-          "page": "&page="
+          "search": "&search=",
+          "page": "&page=",
+          "page_size": "&page_size="
         }
       }
 

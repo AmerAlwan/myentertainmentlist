@@ -4,6 +4,7 @@ import axios from 'axios';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { search } from './util.js';
 import Media from './Media';
+import Game from './Game';
 import './SearchBar.css'
 import * as config from './config.json';
 
@@ -37,30 +38,61 @@ class SearchBar extends Component {
   search = async (val, {page}) => {
   //  this.setState({loading: true});
   //  console.log(val);
-    if(!val) return {
+    if(!val) { return {
       options: [],
       hasMore: false,
       };
-    let msConfig = config.default.config.links.tmdb.multisearch;
-    const res = await search (
-    `${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`
-  //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
-    );
-    const movies = res.results;
+    };
+  let msConfig = config.default.config.links.tmdb.multisearch;
+  const resMovies = await search (
+  `${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`
+//  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
+  );
+  const movies = resMovies.results;
+
+  let gConfig = config.default.config.links.rawg.list;
+  const resGames = await search (
+  `${gConfig.link + gConfig.api_key + config.default.config.keys.rawg + gConfig.search + val + gConfig.page + page + gConfig.page_size + 5}`
+  );
+  const games = resGames.results;
     //console.log(movies);
   //  this.setState({libraries: movies, loading: false})
-  var results = [];
+  var resultsMovies = [];
+  var resultsGames = [];
   if (movies) {
-    results = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
+    resultsMovies = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
   }
+
+  if (games) {
+    resultsGames = games.map(g => ({value: g.id, label: <Game key={g.id} data={g}/>}));
+  }
+
   //console.log(results);
+
   return {
-    options: results,
-    hasMore: res.page < res.total_pages,
+    options: [
+      {
+        label: 'Media',
+        options: resultsMovies
+      },
+      {
+        label: 'Games',
+        options: resultsGames
+      }
+    ],
+    hasMore: ((resMovies.page < resMovies.total_pages) || resGames.next),
     additional: {
       page: page + 1,
     }
   };
+
+  // return {
+  //   options: results,
+  //   hasMore: ()(resMovies.page < resMovies.total_pages) || resGames.next),
+  //   additional: {
+  //     page: page + 1,
+  //   }
+  // };
   };
 
   loadOptions = (inputValue, loadedOptions, { page }) => {
@@ -96,6 +128,9 @@ class SearchBar extends Component {
           components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           controlShouldRenderValue = { false }
           additional={{page:1}}
+          menuIsOpen = {true}
+          closeOnSelect = {false}
+          onBlur = {() => {}}
           />
       </div>
       </>
