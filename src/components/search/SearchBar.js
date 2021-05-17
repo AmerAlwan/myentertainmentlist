@@ -47,6 +47,13 @@ class SearchBar extends Component {
   //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
     );
     const movies = res.results;
+
+    let msConfig = config.default.config.links.tmdb.multisearch;
+    const res = await search (
+    `${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`
+  //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
+    );
+    const movies = res.results;
     //console.log(movies);
   //  this.setState({libraries: movies, loading: false})
   var results = [];

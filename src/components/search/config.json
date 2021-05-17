@@ -19,6 +19,14 @@
               "w92": "/w92/"
             }
           }
+      },
+      "rawg": {
+        "list": {
+          "link": "https://api.rawg.io/api/games?",
+          "api_key": "&key=",
+          "query": "&search=",
+          "page": "&page="
+        }
       }
 
     },
