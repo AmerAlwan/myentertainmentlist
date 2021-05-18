@@ -27,7 +27,7 @@ class Game extends Component {
         <span style={{fontSize:'1rem'}}>{this.state.name + this.state.date}</span>
       </Row>
       <Row>
-        <img src={this.state.image}></img>
+        <img style={{width: "200px", height: "120px"}} src={this.state.image}></img>
       </Row>
       </>
     );

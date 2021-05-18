@@ -21,7 +21,7 @@ const searchButton = {
 const posterPath = 'https://image.tmdb.org/t/p/original/';
 
 const myMenu = props => {
-  console.log(props)
+  //console.log(props)
   return (
     <>
       <components.MenuList className="row" {...props}>
@@ -32,7 +32,7 @@ const myMenu = props => {
 }
 
 const myGroup = props => {
-  console.log(props)
+//  console.log(props)
   return (
     <>
     <Col xs={6}>
