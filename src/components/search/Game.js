@@ -23,11 +23,9 @@ class Game extends Component {
   render() {
     return (
       <>
-      <Row>
-        <span style={{fontSize:'1rem'}}>{this.state.name + this.state.date}</span>
-      </Row>
-      <Row>
-        <img style={{width: "200px", height: "120px"}} src={this.state.image}></img>
+      <Row style={{height:'170px'}}>
+        <span style={{fontSize:'0.8rem'}}>{this.state.name + this.state.date}</span>
+        <img style={{width: "217px", height: "122px"}} src={this.state.image}></img>
       </Row>
       </>
     );

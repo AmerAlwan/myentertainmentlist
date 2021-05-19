@@ -39,7 +39,7 @@ class Media extends Component {
   render() {
     return (
       <>
-      <Row>
+      <Row style={{height:'170px'}}>
         <Col xs={4}>
           <img src={this.state.posterPath}/>
         </Col>

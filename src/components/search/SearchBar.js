@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import axios from 'axios';
-import { AsyncPaginate, wrapMenuList} from 'react-select-async-paginate';
+import { AsyncPaginate, wrapMenuList, reduceGroupedOptions } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import { search } from './util.js';
 import Media from './Media';
@@ -91,10 +91,9 @@ class SearchBar extends Component {
       };
     };
   let msConfig = config.default.config.links.tmdb.multisearch;
-  const resMovies = await search (
-  `${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`
+  const resMovies = await search (`${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`);
 //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
-  );
+
   const movies = resMovies.results;
 
   let gConfig = config.default.config.links.rawg.list;
@@ -178,6 +177,7 @@ class SearchBar extends Component {
           components={{ Group: myGroup, MenuList: wrapMenuList(myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           controlShouldRenderValue = { false }
           additional={{page:1}}
+          reduceOptions={reduceGroupedOptions}
           />
       </div>
     </Row>
