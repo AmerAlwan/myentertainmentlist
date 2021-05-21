@@ -84,53 +84,54 @@ class SearchBar extends Component {
 
   search = async (val, {page}) => {
   //  this.setState({loading: true});
-  //  console.log(val);
+    var t0 = performance.now()
     if(!val) { return {
       options: [],
       hasMore: false,
       };
     };
-  let msConfig = config.default.config.links.tmdb.multisearch;
-  const resMovies = await search (`${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`);
+    let msConfig = config.default.config.links.tmdb.multisearch;
+    let gConfig = config.default.config.links.rawg.list;
+    const resMedia = await search (`${msConfig.link + msConfig.api_key + config.default.config.keys.tmdb + msConfig.query + val + msConfig.page + page}`, `${gConfig.link + gConfig.api_key + config.default.config.keys.rawg + gConfig.search + val + gConfig.page + page + gConfig.page_size + 20}`);
 //  `https://api.themoviedb.org/3/search/multi?api_key=ce242dc8631f3030059e51dca89df4fb&query=${val}&page=${page}`
 
-  const movies = resMovies.results;
-
-  let gConfig = config.default.config.links.rawg.list;
-  const resGames = await search (
-  `${gConfig.link + gConfig.api_key + config.default.config.keys.rawg + gConfig.search + val + gConfig.page + page + gConfig.page_size + 20}`
-  );
-  const games = resGames.results;
-    //console.log(movies);
-  //  this.setState({libraries: movies, loading: false})
-  var resultsMovies = [];
-  var resultsGames = [];
-  if (movies) {
-    resultsMovies = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
-  }
-
-  if (games) {
-    resultsGames = games.map(g => ({value: g.id, label: <Game key={g.id} data={g}/>}));
-  }
-
-  //console.log(results);
-
-  return {
-    options: [
-      {
-        label: 'Media',
-        options: resultsMovies
-      },
-      {
-        label: 'Games',
-        options: resultsGames
+      const resMovies = resMedia[0];
+      const resGames = resMedia[1];
+      const movies = resMovies.data.results;
+      const games = resGames.data.results;
+        //console.log(movies);
+      //  this.setState({libraries: movies, loading: false})
+      var resultsMovies = [];
+      var resultsGames = [];
+      console.log(performance.now()-t0)
+      if (movies) {
+        resultsMovies = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
       }
-    ],
-    hasMore: ((resMovies.page < resMovies.total_pages) || resGames.next),
-    additional: {
-      page: page + 1,
-    }
-  };
+
+      if (games) {
+        resultsGames = games.map(g => ({value: g.id, label: <Game key={g.id} data={g}/>}));
+      }
+
+
+
+      //console.log(results);
+
+      return {
+        options: [
+          {
+            label: 'Media',
+            options: resultsMovies
+          },
+          {
+            label: 'Games',
+            options: resultsGames
+          }
+        ],
+        hasMore: ((resMovies.data.page < resMovies.data.total_pages) || resGames.data.next),
+        additional: {
+          page: page + 1,
+        }
+      };
 
   // return {
   //   options: results,

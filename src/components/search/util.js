@@ -5,7 +5,8 @@ const resources = {};
 const makeRequestCreator = () => {
   let cancel;
 
-  return async query => {
+  return async (...query) => {
+    console.log(query);
     if (cancel) {
       // Cancel the previous request before making a new request
       cancel.cancel();
@@ -13,14 +14,17 @@ const makeRequestCreator = () => {
     // Create a new CancelToken
     cancel = axios.CancelToken.source();
     try {
-      if (resources[query]) {
-        // Return result if it exists
-        console.log("Returned Exisitng Query");
-        return resources[query];
-      }
-      const res = await axios(query, { cancelToken: cancel.token });
+//      if (resources[query]) {
+//        // Return result if it exists
+//        console.log("Returned Exisitng Query");
+//        return resources[query];
+//      }
 
-      const result = res.data;
+      const queries = query.map(q => (axios.get(q, {cancelToken: cancel.token})))
+      const res = await axios.all(queries);
+      console.log(res)
+
+      const result = res
       // Store response
       resources[query] = result;
 
