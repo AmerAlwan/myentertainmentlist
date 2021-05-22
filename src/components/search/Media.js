@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import * as config from './config.json';
 import defaultposter from './../../images/defaultposter.jpg';
 

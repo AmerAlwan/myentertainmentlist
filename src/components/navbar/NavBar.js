@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Container, Navbar, Nav, Form, FormControl, Button} from 'react-bootstrap';
+import {Container, Navbar, Nav} from 'react-bootstrap';
 import SearchBar from '../search/SearchBar'
 
 class NavBar extends Component {

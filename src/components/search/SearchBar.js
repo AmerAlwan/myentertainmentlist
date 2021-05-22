@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-bootstrap'
-import axios from 'axios';
 import { AsyncPaginate, wrapMenuList, reduceGroupedOptions } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import { search } from './util.js';
@@ -13,12 +12,6 @@ const searchBarStyle = {
   width: '700px',
   display: 'inline-block',
 };
-
-const searchButton = {
-  marginBottom: '0.3rem'
-};
-
-const posterPath = 'https://image.tmdb.org/t/p/original/';
 
 const myMenu = props => {
   //console.log(props)

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Route, NavLink, BrowserRouter, Switch} from 'react-router-dom';
-import App from './App';
+import {Route, Switch} from 'react-router-dom';
 import Home from './pages/Home';
 import Search from './pages/Search';
 
