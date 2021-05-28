@@ -7,11 +7,7 @@ class NavBar extends Component {
 
   render() {
     return (
-
-
     <>
-
-
         <Navbar bg='dark' variant='dark'collapseOnSelect>
           <Container fluid>
           <Navbar.Collapse id="basic-navbar-nav">

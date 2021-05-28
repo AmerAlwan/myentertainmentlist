@@ -1,39 +1,18 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap';
 import { AsyncPaginate, wrapMenuList, reduceGroupedOptions } from 'react-select-async-paginate';
 import { components } from 'react-select';
 import { search } from './util.js';
 import Media from './Media';
 import Game from './Game';
 import './SearchBar.css'
-import * as config from './config.json';
+import * as config from '../../config.json';
+import { Redirect } from 'react-router-dom';
 
 const searchBarStyle = {
   width: '700px',
   display: 'inline-block',
 };
-
-const myMenu = props => {
-  //console.log(props)
-  return (
-    <>
-      <components.MenuList className="row" {...props}>
-        {props.children}
-      </components.MenuList>
-    </>
-  )
-}
-
-const myGroup = props => {
-//  console.log(props)
-  return (
-    <>
-    <Col xs={6}>
-      <components.Group {...props}></components.Group>
-    </Col>
-    </>
-  )
-}
 
 //
 // const myOptions = props => {
@@ -69,9 +48,12 @@ class SearchBar extends Component {
       this.state = {
         movies: null,
         loading: false,
-        value: ''
+        value: '',
+        redirect: false,
+        redirectLink: ''
       };
       this.onChangeHandler = this.onChangeHandler.bind(this);
+      this.handleItemChosen = this.handleItemChosen.bind(this);
     }
 
 
@@ -145,6 +127,53 @@ class SearchBar extends Component {
     this.setState({value: e.value});
   };
 
+  handleItemChosen = (e, props) => {
+    e.stopPropagation();
+    e.preventDefault();
+    let id = props.data.label.props.data.id;
+    let type = props.data.label.props.data.media_type;
+    //const history = useHistory();
+   // history.push(`/media/$type/$id`);
+   this.setState({redirect: true, redirectLink: `/media/${type}/${id}`});
+        //  console.log(id + " " + type);
+
+  }
+
+
+
+myMenu = props => {
+  //console.log(props)
+  return (
+    <>
+      <components.MenuList className="row" {...props}>
+        {props.children}
+      </components.MenuList>
+    </>
+  )
+}
+
+myGroup = props => {
+//  console.log(props)
+  return (
+    <>
+    <Col xs={6}>
+      <components.Group {...props}></components.Group>
+    </Col>
+    </>
+  )
+}
+
+
+myOption = props => {
+ // console.log(props)
+  return (
+    <>
+    <div onClick={e => this.handleItemChosen(e, props)}>
+      <components.Option {...props}></components.Option>
+    </div>
+    </>
+  )
+}
 
 
   // get renderMovies() {
@@ -157,26 +186,30 @@ class SearchBar extends Component {
 
 
   render() {
-  return (
+        if(this.state.redirect) {
+            return (<><Redirect to={this.state.redirectLink} /></>)
+          }
 
-      <>
-      <Row>
-      <div style={searchBarStyle}>
-        <AsyncPaginate
-          style={searchBarStyle}
-          cacheOptions
-          placeholder="Search Media..."
-          loadOptions={this.loadOptions}
-          onInputChange={this.onChangeHandler}
-          components={{ Group: myGroup, MenuList: wrapMenuList(myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
-          controlShouldRenderValue = { false }
-          additional={{page:1}}
-          reduceOptions={reduceGroupedOptions}
-          />
-      </div>
-    </Row>
-      </>
-  );
+      return (
+          <>
+
+          <Row>
+          <div style={searchBarStyle}>
+            <AsyncPaginate
+              style={searchBarStyle}
+              cacheOptions
+              placeholder="Search Media..."
+              loadOptions={this.loadOptions}
+              onInputChange={this.onChangeHandler}
+              components={{ Option: this.myOption, Group: this.myGroup, MenuList: wrapMenuList(this.myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+              controlShouldRenderValue = { false }
+              additional={{page:1}}
+              reduceOptions={reduceGroupedOptions}
+              />
+          </div>
+        </Row>
+          </>
+      );
 }
 }
 
