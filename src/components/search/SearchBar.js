@@ -7,7 +7,7 @@ import Media from './Media';
 import Game from './Game';
 import './SearchBar.css'
 import * as config from '../../config.json';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const searchBarStyle = {
   width: '700px',
@@ -132,9 +132,10 @@ class SearchBar extends Component {
     e.preventDefault();
     let id = props.data.label.props.data.id;
     let type = props.data.label.props.data.media_type;
+    this.props.history.push(`/media/${type}/${id}`);
     //const history = useHistory();
    // history.push(`/media/$type/$id`);
-   this.setState({redirect: true, redirectLink: `/media/${type}/${id}`});
+   //this.setState({redirect: true, redirectLink: `/media/${type}/${id}`});
         //  console.log(id + " " + type);
 
   }
@@ -186,9 +187,9 @@ myOption = props => {
 
 
   render() {
-        if(this.state.redirect) {
-            return (<><Redirect to={this.state.redirectLink} /></>)
-          }
+//        if(this.state.redirect) {
+//            return (<><Redirect to={this.state.redirectLink} /></>)
+//          }
 
       return (
           <>
@@ -213,4 +214,4 @@ myOption = props => {
 }
 }
 
-export default SearchBar;
+export default withRouter(SearchBar);
