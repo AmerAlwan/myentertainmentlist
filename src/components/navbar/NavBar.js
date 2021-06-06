@@ -8,25 +8,18 @@ class NavBar extends Component {
   render() {
     return (
     <>
-        <Navbar bg='dark' variant='dark'collapseOnSelect>
-          <Container fluid>
-          <Navbar.Collapse id="basic-navbar-nav">
-          <Navbar.Brand as={Link} to='/'>myEList</Navbar.Brand>
-            <Nav className='mr-auto'>
+        <Navbar expand="lg" bg='dark' variant='dark' collapseOnSelect style={{marginBottom: "20px", padding: "15px 10px"}}>
+        <Navbar.Brand as={Link} to='/'>myEList</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic_navbar_nav" />
+          <Navbar.Collapse id="basic_navbar_nav">
+            <Nav className="mr-auto" style={{ maxHeight: '100px' }}>
               <Nav.Link as={Link} to='/'>Home</Nav.Link>
               <Nav.Link as={Link} to='/search'>Search</Nav.Link>
               <SearchBar/>
             </Nav>
 
           </Navbar.Collapse>
-          </Container>
         </Navbar>
-
-
-      <ul className="navbar-buttons">
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/search'>Search</Link></li>
-      </ul>
     </>
   )
   }

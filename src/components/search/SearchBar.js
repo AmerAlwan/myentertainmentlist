@@ -157,7 +157,7 @@ myGroup = props => {
 //  console.log(props)
   return (
     <>
-    <Col xs={6}>
+    <Col xs={12} lg={6}>
       <components.Group {...props}></components.Group>
     </Col>
     </>
@@ -194,21 +194,25 @@ myOption = props => {
       return (
           <>
 
-          <Row>
+
           <div style={searchBarStyle}>
-            <AsyncPaginate
-              style={searchBarStyle}
-              cacheOptions
-              placeholder="Search Media..."
-              loadOptions={this.loadOptions}
-              onInputChange={this.onChangeHandler}
-              components={{ Option: this.myOption, Group: this.myGroup, MenuList: wrapMenuList(this.myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
-              controlShouldRenderValue = { false }
-              additional={{page:1}}
-              reduceOptions={reduceGroupedOptions}
-              />
+            <Row>
+                <Col xs={6} lg={12}>
+                    <AsyncPaginate
+                      style={searchBarStyle}
+                      cacheOptions
+                      placeholder="Search Media..."
+                      loadOptions={this.loadOptions}
+                      onInputChange={this.onChangeHandler}
+                      components={{ Option: this.myOption, Group: this.myGroup, MenuList: wrapMenuList(this.myMenu),  DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+                      controlShouldRenderValue = { false }
+                      additional={{page:1}}
+                      reduceOptions={reduceGroupedOptions}
+                      />
+                </Col>
+              </Row>
           </div>
-        </Row>
+
           </>
       );
 }

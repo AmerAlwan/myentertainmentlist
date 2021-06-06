@@ -16,16 +16,24 @@
         "image": {
           "link": "https://image.tmdb.org/t/p",
           "size": {
-            "w92": "/w92/"
+            "original": "/original/",
+            "backdrop_thumbnail": "/w300/",
+            "w92": "/w92/",
+            "backdrop_medium": "/w780/",
+            "logo": {
+              "w45": "/w45/"
+            }
           }
         },
         "movie": {
           "link": "https://api.themoviedb.org/3/movie/",
-          "api_key": "&api_key="
+          "api_key": "&api_key=",
+          "images": "images?"
         },
         "tv": {
           "link": "https://api.themoviedb.org/3/tv/",
-          "api_key": "&api_key="
+          "api_key": "&api_key=",
+          "images": "images?"
         }
 
       },
