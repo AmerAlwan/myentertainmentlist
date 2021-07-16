@@ -22,6 +22,9 @@
             "backdrop_medium": "/w780/",
             "logo": {
               "w45": "/w45/"
+            },
+            "poster": {
+              "medium": "/w500/"
             }
           }
         },

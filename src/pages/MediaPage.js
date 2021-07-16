@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 import * as config from '../config.json';
 import { search } from '../components/search/util.js';
 import MediaListCard from '../components/mediapage/companies/MediaListCard'
@@ -23,7 +23,7 @@ class MediaPage extends Component {
 
     async setData(id, prevId, type) {
         if (id !== prevId) {
-            let msConfig, title, images, production_companies, production_countries, spoken_languages, networks;
+            let msConfig, title, images, production_companies, production_countries, spoken_languages, networks, description, poster_path;
             let imgConfig = config.default.config.links.tmdb.image;
             const [isMovie, isTv, isGame] = [type === "movie", type === "tv", type === "game"]
             if(isMovie || isTv) {
@@ -47,11 +47,14 @@ class MediaPage extends Component {
                     }
                 ));
 
+                poster_path = `${imgConfig.link + imgConfig.size.poster.medium + data.poster_path}`;
+
                 console.log(data);
                 console.log(imageResults);
                 console.log(images);
 
                 title = isMovie ? data.title : data.name;
+                description = data.overview;
 
                 production_companies = data.production_companies;
                 production_companies.forEach(company => {company.logo_path = `${imgConfig.link + imgConfig.size.logo.w45 + company.logo_path}`});
@@ -71,7 +74,7 @@ class MediaPage extends Component {
 
             }
 
-            this.setState({title: title, images: images, production_companies: production_companies, type: type, production_countries: production_countries, spoken_languages, networks: networks})
+            this.setState({title: title, description: description, images: images, poster_path: poster_path, production_companies: production_companies, type: type, production_countries: production_countries, spoken_languages, networks: networks})
         }
     }
 
@@ -87,7 +90,7 @@ class MediaPage extends Component {
         return (
         <>
              <Row className="fixRowOutOfScreen">
-                <Col xs={12}>
+                <Col xl={12} xs={12}>
                     <ImageGallery
                         items={ this.state.images }
                         lazyLoad
@@ -99,9 +102,23 @@ class MediaPage extends Component {
                     />
                 </Col>
              </Row>
-              <Row className="fixRowOutOfScreen">
-                 <Col xs={12} style={{textAlign: "center"}}>
-                     <span style={{fontSize:"calc(1rem + 6vw)", color:"#dbdbdb"}}>{this.state.title}</span>
+              <Row className="fixRowOutOfScreen mediaCardBox" style={{margin: "0.5rem"}}>
+                 <Col xs={12} xl={4}>
+                    <Row>
+                        <Col xs={12}>
+                            <Image src={this.state.poster_path} style={{width: "calc(15rem + 6vw)", height: "auto"}}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            <span style={{fontSize:"calc(1rem + 1vw)", color:"#dbdbdb", textAlign: "center"}}>{this.state.title}</span>
+                        </Col>
+                    </Row>
+                 </Col>
+                 <Col xs={12} xl={4}>
+                     {this.state.description}
+                </Col>
+                 <Col xs={4}>
                      <MediaListCard title="Production Companies" hasLogo list={this.state.production_companies} />
                      <MediaListCard title="Production Countries" hasLogo list={this.state.production_countries} idValue="iso_3166_1" />
                      <MediaListCard title="Spoken Languages" hasLogo={false} list={this.state.spoken_languages} idValue="iso_639_1" nameValue="english_name" />
