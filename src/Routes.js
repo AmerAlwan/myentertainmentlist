@@ -5,11 +5,11 @@ import Search from './pages/Search';
 import MediaPage from './pages/MediaPage';
 
 const routes = function Routes() {
+    //<Route path='/search' component={Search}/>
   return (
 
     <Switch>
       <Route exact path='/' component={Home}/>
-      <Route path='/search' component={Search}/>
       <Route path='/media/:type/:id' component={MediaPage}/>
     </Switch>
 

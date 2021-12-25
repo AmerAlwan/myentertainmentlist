@@ -8,8 +8,8 @@ class Media extends Component {
 
   constructor(props) {
     super(props);
-    //console.log(config.default.config.ids.genres);
-    //console.log(this.props.data.poster_path);
+    ////console.log(config.default.config.ids.genres);
+    ////console.log(this.props.data.poster_path);
     let cConfig = config.default.config;
     this.state = {
        title: this.validateDefault(this.props.data.title, this.validate(this.props.data.name)),

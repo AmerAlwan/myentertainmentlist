@@ -6,7 +6,7 @@ const makeRequestCreator = () => {
   let cancel;
 
   return async (...query) => {
-    console.log(query);
+    //console.log(query);
     if (cancel) {
       // Cancel the previous request before making a new request
       cancel.cancel();
@@ -16,13 +16,13 @@ const makeRequestCreator = () => {
     try {
 //      if (resources[query]) {
 //        // Return result if it exists
-//        console.log("Returned Exisitng Query");
+//        //console.log("Returned Exisitng Query");
 //        return resources[query];
 //      }
 
       const queries = query.map(q => (axios.get(q, {cancelToken: cancel.token})))
       const res = await axios.all(queries);
-      console.log(res)
+      //console.log(res)
 
       const result = res
       // Store response
@@ -32,10 +32,10 @@ const makeRequestCreator = () => {
     } catch (error) {
       if (axios.isCancel(error)) {
         // Handle if request was cancelled
-        console.log('Request canceled', error.message);
+        //console.log('Request canceled', error.message);
       } else {
         // Handle usual errors
-        console.log('Something went wrong: ', error.message);
+        //console.log('Something went wrong: ', error.message);
       }
     }
   };

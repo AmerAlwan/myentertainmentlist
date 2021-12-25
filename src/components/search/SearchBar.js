@@ -10,16 +10,20 @@ import * as config from '../../config.json';
 import { withRouter } from 'react-router-dom';
 
 const searchBarStyle = {
-  width: '700px',
-  display: 'inline-block',
+  display: 'table',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  height: '100%',
+  width: '100%'
 };
 
 //
 // const myOptions = props => {
 //
-//   console.log(props)
-// //  console.log(innerRef)
-//   //console.log(innerProps)
+//   //console.log(props)
+// //  //console.log(innerRef)
+//   ////console.log(innerProps)
 //   return (
 //     <>
 //     <Row>
@@ -54,6 +58,7 @@ class SearchBar extends Component {
       };
       this.onChangeHandler = this.onChangeHandler.bind(this);
       this.handleItemChosen = this.handleItemChosen.bind(this);
+      this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
 
@@ -74,11 +79,11 @@ class SearchBar extends Component {
       const resGames = resMedia[1];
       const movies = resMovies.data.results;
       const games = resGames.data.results;
-        //console.log(movies);
+        ////console.log(movies);
       //  this.setState({libraries: movies, loading: false})
       var resultsMovies = [];
       var resultsGames = [];
-      console.log(performance.now()-t0)
+      //console.log(performance.now()-t0)
       if (movies) {
         resultsMovies = movies.map(m => ({value: m.id, label: <Media key={m.id} data={m}/>}));
       }
@@ -89,7 +94,7 @@ class SearchBar extends Component {
 
 
 
-      //console.log(results);
+      ////console.log(results);
 
       return {
         options: [
@@ -131,19 +136,33 @@ class SearchBar extends Component {
     e.stopPropagation();
     e.preventDefault();
     let id = props.data.label.props.data.id;
-    let type = props.data.label.props.data.media_type;
+    let type = props.data.label.props.data.media_type ? props.data.label.props.data.media_type : "game";
     this.props.history.push(`/media/${type}/${id}`);
     //const history = useHistory();
    // history.push(`/media/$type/$id`);
    //this.setState({redirect: true, redirectLink: `/media/${type}/${id}`});
-        //  console.log(id + " " + type);
+        //  //console.log(id + " " + type);
 
+  }
+
+  handleKeyDown = (e, props) => {
+    if(e.key === 'Enter') {
+      e.stopPropagation();
+      e.preventDefault();
+      let id = props.data.label.props.data.id;
+      let type = props.data.label.props.data.media_type ? props.data.label.props.data.media_type : "game";
+      this.props.history.push(`/media/${type}/${id}`);
+      //const history = useHistory();
+      // history.push(`/media/$type/$id`);
+      //this.setState({redirect: true, redirectLink: `/media/${type}/${id}`});
+      //  //console.log(id + " " + type);
+    }
   }
 
 
 
 myMenu = props => {
-  //console.log(props)
+  ////console.log(props)
   return (
     <>
       <components.MenuList className="row" {...props}>
@@ -154,10 +173,10 @@ myMenu = props => {
 }
 
 myGroup = props => {
-//  console.log(props)
+//  //console.log(props)
   return (
     <>
-    <Col xs={12} lg={6}>
+    <Col xs={12} md={6} lg={6}>
       <components.Group {...props}></components.Group>
     </Col>
     </>
@@ -166,10 +185,10 @@ myGroup = props => {
 
 
 myOption = props => {
- // console.log(props)
+ // //console.log(props)
   return (
     <>
-    <div onClick={e => this.handleItemChosen(e, props)}>
+    <div onClick={e => this.handleItemChosen(e, props)} onKeyDown={e => this.handleKeyDown(e, props)}>
       <components.Option {...props}></components.Option>
     </div>
     </>
@@ -195,11 +214,8 @@ myOption = props => {
           <>
 
 
-          <div style={searchBarStyle}>
-            <Row>
-                <Col xs={6} lg={12}>
+
                     <AsyncPaginate
-                      style={searchBarStyle}
                       cacheOptions
                       placeholder="Search Media..."
                       loadOptions={this.loadOptions}
@@ -209,9 +225,7 @@ myOption = props => {
                       additional={{page:1}}
                       reduceOptions={reduceGroupedOptions}
                       />
-                </Col>
-              </Row>
-          </div>
+
 
           </>
       );
