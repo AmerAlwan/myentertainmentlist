@@ -9,7 +9,8 @@ class ProductionCard extends Component {
         this.state = {
             logos: this.getLogos(),
             hasLogo: this.props.hasLogo,
-            title: this.props.title
+            title: this.props.title,
+            id: this.props.id
         }
     }
 
@@ -23,7 +24,7 @@ class ProductionCard extends Component {
 
     async componentDidUpdate(prevProps, prevState) {
         if(this.props !== prevProps) {
-            this.setState({logos: this.getLogos()})
+            this.setState({logos: this.getLogos(), title: this.props.title})
         }
     }
 
@@ -34,7 +35,7 @@ class ProductionCard extends Component {
                     <Row>
                         <Col xs={12}>
                             <h3 className="mediaCardTitle">{this.state.title}</h3>
-                            <li style={{listStyle: "none"}}>
+                            <li key={this.state.id} style={{listStyle: "none"}}>
                                 {this.state.logos}
                             </li>
                         </Col>
