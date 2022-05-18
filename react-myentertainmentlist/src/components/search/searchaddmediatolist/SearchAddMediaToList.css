@@ -1,0 +1,19 @@
+.search-add-media-list-dropdown .dropdown-toggle {
+    width: 50%;
+    color: black;
+    border-radius: 20px;
+}
+
+
+.search-add-media-list-dropdown .dropdown-toggle::after {
+    display: none;
+}
+
+.search-add-media-list-dropdown .dropdown-menu {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translate(-50%, 20%) !important;
+    width: 50%;
+    text-align: center;
+    overflow-y: scroll !important;
+}

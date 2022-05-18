@@ -1,0 +1,95 @@
+{
+  "config": {
+    "keys": {
+      "tmdb": "ce242dc8631f3030059e51dca89df4fb",
+      "rawg": "c399a3d046b44f4ca5efd92d65429209"
+    },
+    "links": {
+      "tmdb": {
+        "multisearch": {
+            "link": "https://api.themoviedb.org/3/search/multi?",
+            "query": "&query=",
+            "api_key": "&api_key=",
+            "include_adult": "&include_adult=",
+            "page": "&page="
+          },
+        "image": {
+          "link": "https://image.tmdb.org/t/p",
+          "size": {
+            "original": "/original/",
+            "backdrop_thumbnail": "/w300/",
+            "w92": "/w92/",
+            "backdrop_medium": "/w780/",
+            "logo": {
+              "w45": "/w45/"
+            },
+            "poster": {
+              "medium": "/w500/"
+            }
+          }
+        },
+        "movie": {
+          "link": "https://api.themoviedb.org/3/movie/",
+          "api_key": "&api_key=",
+          "images": "images?"
+        },
+        "tv": {
+          "link": "https://api.themoviedb.org/3/tv/",
+          "api_key": "&api_key=",
+          "images": "images?"
+        }
+
+      },
+      "rawg": {
+        "list": {
+          "link": "https://api.rawg.io/api/games?",
+          "api_key": "&key=",
+          "search": "&search=",
+          "page": "&page=",
+          "page_size": "&page_size="
+        },
+        "game": {
+          "link": "https://api.rawg.io/api/games/",
+          "api_key": "&key="
+        }
+      }
+
+    },
+    "ids": {
+      "tmdb": {
+        "genres": {
+          "28": "Action",
+          "12": "Adventure",
+          "16": "Animation",
+          "35": "Comedy",
+          "80": "Crime",
+          "99": "Documentary",
+          "18": "Drama",
+          "10751": "Family",
+          "14": "Fantasy",
+          "36": "History",
+          "27": "Horror",
+          "10402": "Music",
+          "9648": "Mystery",
+          "10749": "Romance",
+          "878": "Science Fiction",
+          "10770": "TV Movie",
+          "53": "Thriller",
+          "10752": "War",
+          "37": "Western",
+          "10763": "News",
+          "10766": "Soap",
+          "10768": "War & Politics",
+          "10765": "Sci-Fi & Fantasy",
+          "10764": "Reality",
+          "10762": "Kids",
+          "10767": "Talk",
+          "10759": "Action & Adventure"
+        }
+      }
+    },
+    "images": {
+      "defaultPoster": "./../../images/defaultposter.jpg"
+    }
+  }
+}

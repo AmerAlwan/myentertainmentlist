@@ -1,0 +1,70 @@
+.mel-DropdownToggle {
+    background-color: white;
+    color: black;
+    font-weight: normal;
+    padding: 0.7rem;
+    border-radius: 20px;
+    margin-right: 20px;
+}
+
+a:link {text-decoration: none;}
+a:visited {text-decoration: none;}
+a:hover {text-decoration: none;}
+a:active {text-decoration: none;}
+
+.mel-DropdownToggle:hover {
+    background-color: grey;
+    color: black;
+}
+
+.mel-DropdownToggle:active {
+    background-color: grey;
+}
+
+.mel-DropdownToggle:focus {
+    background-color: white;
+}
+
+#mel-DropdownToggle-Arrow {
+    margin: 0 10px;
+}
+
+#mel-DropdownToggle-Children {
+    margin: 0 10px;
+}
+
+.mel-DropdownMenu {
+    position: absolute;
+    bottom: -1rem;
+}
+
+.mel-DropdownMenu ul {
+    margin-bottom: 0;
+}
+
+.mel-DropdownMenu .dropdown-menu {
+    border-radius: 20px;
+}
+
+.mel-DropdownMenu .dropdown-menu a:hover {
+    border-radius: 20px;
+}
+
+.dropdown .dropdown-menu {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+
+    max-height: 0;
+    display: block;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.dropdown.show .dropdown-menu {
+    max-height: 300px;
+    opacity: 1;
+}
+
