@@ -270,8 +270,7 @@ class MediaPage extends Component {
                             <Image src={this.state.poster_path}
                                    style={{
                                        maxWidth: "60vh",
-                                       height: "auto",
-                                       boxShadow: '5px 5px 15px 5px rgba(0,0,0,0.22)'
+                                       height: "auto"
                             }}/>
                         </Row>
                         <Row>
