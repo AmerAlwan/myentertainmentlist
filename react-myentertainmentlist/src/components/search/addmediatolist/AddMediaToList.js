@@ -6,30 +6,38 @@ import {Dropdown, Row} from "react-bootstrap";
 import './AddMediaToList.css';
 import MedialistService from "../../backend/medialist.service";
 import {setMediaLists} from "../../../redux/slices/UserSlice";
+//import {setMediaLists} from "../../../redux/slices/UserSlice";
 
 const getMedialistType = type => (type === 'MEDIA_MOVIE' && 'movie') || (type === 'MEDIA_TV' && 'tv') || (type === 'MEDIA_GAME' && 'game') || 'all';
 
 export function AddMediaToList(props) {
     const accessToken = useSelector(state => state.user.accessToken);
-    const [mediaLists, setMediaLists] = useState([]);
-
-    useEffect(() => MedialistService.getLists(accessToken).then(response => {
-        if (response.status === 200) setMediaLists(response.data.slice().sort((cML, pML) => cML.name.localeCompare(pML.name)));
-    }), []);
+    const mediaLists = useSelector(state => state.user.mediaLists);
+    const dispatch = useDispatch();
 
     const onDropdownItemSelect = (eventKey, e) => {
         console.log(eventKey);
         const mediaListId = eventKey.target.id;
         const mediaType = props.type;
-        const media = {apiId: props.apiId, title: props.title, posterPath: props.posterPath, releaseYear: props.releaseYear};
+        console.log(props.playTime);
+        const media = {apiId: props.apiId, title: props.title, posterPath: props.posterPath, playTime: props.playTime, releaseYear: props.releaseYear};
         if (mediaType === 'movie') {
             MedialistService.addMovie(mediaListId, media, accessToken).then(response => {
+                MedialistService.getLists(accessToken).then(response =>
+                    response && response.status === 200 && response.data && dispatch((setMediaLists(response.data)))
+                );
             });
         } else if (mediaType === 'tv') {
             MedialistService.addTv(mediaListId, media, accessToken).then(response => {
+                MedialistService.getLists(accessToken).then(response =>
+                    response && response.status === 200 && response.data && dispatch((setMediaLists(response.data)))
+                );
             });
         } else if (mediaType === 'game') {
             MedialistService.addGame(mediaListId, media, accessToken).then(response => {
+                MedialistService.getLists(accessToken).then(response =>
+                    response && response.status === 200 && response.data && dispatch((setMediaLists(response.data)))
+                );
             });
         }
     }

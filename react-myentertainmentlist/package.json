@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@devexpress/dx-react-chart": "^3.0.3",
+    "@devexpress/dx-react-core": "^3.0.3",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
@@ -20,6 +22,7 @@
     "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
     "react-dom-factories": "^1.0.2",
+    "react-grid-gallery": "^0.5.5",
     "react-image-gallery": "^1.1.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.2.0",
@@ -29,6 +32,7 @@
     "react-selectize": "^3.0.1",
     "react-suspense-img": "^0.2.0",
     "react-ui-cards": "^3.0.0",
+    "recharts": "^2.1.10",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

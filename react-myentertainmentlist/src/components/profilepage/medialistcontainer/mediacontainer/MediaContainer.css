@@ -1,5 +1,10 @@
 .media-container {
-    padding: 3rem;
+    padding: 3vw;
+    width: 100%;
+}
+
+.src-Card-styles-module__card--1s_T3 {
+    margin: 1rem auto !important;
 }
 
 .media-inner:before {
@@ -17,7 +22,7 @@
 }
 
 .media-inner {
-    padding: 3rem;
+    padding: 3vw;
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
     border-radius: 5px;
     position: relative;

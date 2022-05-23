@@ -3,19 +3,36 @@ import SearchBar from '../components/search/SearchBar'
 import { Row, Col } from 'react-bootstrap';
 import NavBar from "../components/navbar/AppNavBar";
 import {UserInfo} from "../components/profilepage/userinfo/UserInfo";
+import * as config from "../config.json";
+import {search} from '../components/search/util';
+import Gallery from 'react-grid-gallery';
+import './Home.css';
+import {HomeSearchBar} from "../components/home/homesearchbar/HomeSearchBar";
+import {HomeGallery} from "../components/home/homegallery/HomeGallery";
 
 class Home extends Component {
-  render() {
-    return (
 
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        document.body.style.overflowY = 'hidden';
+        document.body.style.backgroundColor = 'black !important';
+    }
+
+    componentWillUnmount() {
+        document.body.style.overflowY = 'auto';
+        document.body.style.backgroundColor = 'rgb(21, 30, 44) !important';
+    }
+
+    render() {
+    return (
     <>
-        <NavBar showLogin/>
-        <h1 style={{fontSize: "calc(4rem + 6vw)", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -150%)", width: "100%", textAlign: "center"}}>MyEList</h1>
-        <h3 style={{fontSize: "calc(1.1rem + 0.7vw)", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -200%)", width: "100%", textAlign: "center"}}>Simply Search for any Movie/TV Show/Game!</h3>
-        <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -60%)"}}>
-            <SearchBar/>
-        </div>
-        </>
+        <NavBar showLogin position='fixed'/>
+        <HomeGallery />
+        <HomeSearchBar />
+    </>
     )
   }
 }

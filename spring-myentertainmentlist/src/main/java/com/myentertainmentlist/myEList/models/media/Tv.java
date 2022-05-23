@@ -22,6 +22,9 @@ public class Tv {
     @Column(name = "poster_path")
     private String posterPath;
 
+    @Column(name = "play_time")
+    private int playTime;
+
     @Column(name = "release_year")
     private short releaseYear;
 
@@ -36,10 +39,11 @@ public class Tv {
 
     public Tv() {}
 
-    public Tv(String apiId, String title, String posterPath, short releaseYear) {
+    public Tv(String apiId, String title, String posterPath, int playTime, short releaseYear) {
         this.apiId = apiId;
         this.title = title;
         this.releaseYear = releaseYear;
+        this.playTime = playTime;
         this.posterPath = posterPath;
     }
 
@@ -67,6 +71,10 @@ public class Tv {
         this.posterPath = posterPath;
     }
 
+    public void setPlayTime(int playTime) {
+        this.playTime = playTime;
+    }
+
     public long getId() {
         return id;
     }
@@ -89,5 +97,9 @@ public class Tv {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public int getPlayTime() {
+        return playTime;
     }
 }

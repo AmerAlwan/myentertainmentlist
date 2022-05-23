@@ -1,10 +1,12 @@
 import {Component} from "react";
-import {loginSuccess, setMediaLists} from "../../redux/slices/UserSlice";
+import {loginSuccess, resetMediaLists, setMediaLists} from "../../redux/slices/UserSlice";
 import {connect} from "react-redux";
 import {UserInfo} from "../../components/profilepage/userinfo/UserInfo";
 import AppNavBar from "../../components/navbar/AppNavBar";
 import {AddMediaToList} from "../../components/search/addmediatolist/AddMediaToList";
 import MedialistService from "../../components/backend/medialist.service";
+import {MediaListContainer} from "../../components/profilepage/medialistcontainer/MediaListContainer";
+import {MediaPlaytimeGraph} from "../../components/profilepage/mediaplaytimegraph/MediaPlaytimeGraph";
 
 class ProfilePage extends Component {
     constructor(props) {
@@ -15,18 +17,18 @@ class ProfilePage extends Component {
     }
 
     componentDidMount() {
-        MedialistService.getLists(this.props.user.accessToken).then(response => {
-            if (response.status === 200) this.props.setMediaLists(response.data);
-            console.log(response);
-        });
+        MedialistService.getLists(this.props.user.accessToken).then(response =>
+            response && response.status === 200 && response.data && this.props.setMediaLists(response.data)
+        );
     }
 
     render() {
-
         return (
             <>
                 <AppNavBar showSearchBar showLogin />
                 <UserInfo user={this.props.user} />
+                <MediaPlaytimeGraph />
+                <MediaListContainer />
             </>
         )
     }
@@ -34,7 +36,7 @@ class ProfilePage extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        setMediaLists: mediaLists => dispatch(setMediaLists(mediaLists))
+        setMediaLists: accessToken => dispatch(setMediaLists(accessToken))
     }
 }
 

@@ -6,11 +6,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  background-color: rgb(41, 51, 60) !important;
+  background-color: rgb(21, 30, 44) !important;
 }
 
 .css-26l3qy-menu {
   z-index: 1000 !important;
+}
+
+.ReactGridGallery_tile {
+  /*transform: rotate3d(1,1,0.3, 35deg);*/
+  /*transform: scaleX(1) scaleY(1) scaleZ(1) rotateX(-3deg) rotateY(-34deg) rotateZ(16deg) translateX(0px) translateY(0px) translateZ(0px) skewX(-14deg) skewY(-7deg);*/
+  margin: 3.5px -11px !important;
 }
 
 code {

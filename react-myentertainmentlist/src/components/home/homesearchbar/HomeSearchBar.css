@@ -1,0 +1,4 @@
+.home-text-shadow {
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 1px 3px 0px, rgba(0, 0, 0, 0.77) 1px 13px 5px;
+}

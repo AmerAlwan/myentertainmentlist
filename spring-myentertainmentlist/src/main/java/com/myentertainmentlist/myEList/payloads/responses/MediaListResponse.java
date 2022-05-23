@@ -12,14 +12,16 @@ public class MediaListResponse {
     private String name;
     private String description;
     private boolean isPrivate;
+    private boolean isAll;
     private Set<Movie> movies;
     private Set<Tv> tvs;
     private Set<Game> games;
 
-    public MediaListResponse(Long id, String name, String description, boolean isPrivate, Set<Movie> movies, Set<Tv> tvs, Set<Game> games) {
+    public MediaListResponse(Long id, String name, String description, boolean isAll, boolean isPrivate, Set<Movie> movies, Set<Tv> tvs, Set<Game> games) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.isAll = isAll;
         this.isPrivate = isPrivate;
         this.movies = movies;
         this.tvs = tvs;
@@ -54,6 +56,10 @@ public class MediaListResponse {
         this.games = games;
     }
 
+    public void setAll(boolean all) {
+        isAll = all;
+    }
+
     public Long getId() {
         return id;
     }
@@ -80,5 +86,9 @@ public class MediaListResponse {
 
     public Set<Game> getGames() {
         return games;
+    }
+
+    public boolean isAll() {
+        return isAll;
     }
 }

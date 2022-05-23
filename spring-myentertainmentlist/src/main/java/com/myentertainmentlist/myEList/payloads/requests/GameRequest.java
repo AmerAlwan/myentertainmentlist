@@ -11,14 +11,17 @@ public class GameRequest {
 
     private String posterPath;
 
+    private int playTime;
+
     private short releaseYear;
 
     public  GameRequest() {}
 
-    public GameRequest(String apiId, String title, String posterPath, short releaseYear) {
+    public GameRequest(String apiId, String title, String posterPath, int playTime, short releaseYear) {
         this.apiId = apiId;
         this.title = title;
         this.posterPath = posterPath;
+        this.playTime = playTime;
         this.releaseYear = releaseYear;
     }
 
@@ -38,6 +41,10 @@ public class GameRequest {
         this.releaseYear = releaseYear;
     }
 
+    public void setPlayTime(int playTime) {
+        this.playTime = playTime;
+    }
+
     public String getApiId() {
         return apiId;
     }
@@ -52,5 +59,9 @@ public class GameRequest {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public int getPlayTime() {
+        return playTime;
     }
 }

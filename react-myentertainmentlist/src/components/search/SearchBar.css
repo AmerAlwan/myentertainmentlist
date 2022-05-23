@@ -1,21 +1,21 @@
 .mel-searchbar-container-default {
-  width: calc(300px + 25vw);
+  width: calc(300px + 22vw);
 }
 
 .mel-searchbar-container-animate {
-  width: calc(20px + 20vw);
+  width: calc(50px + 20vw);
   border-radius: 20px;
   overflow: hidden;
   transition: width 1s, border-radius 1s;
 }
 
 .mel-searchbar-container-animate:focus-within {
-  width: calc(300px + 25vw);
+  width: calc(300px + 22vw);
   border-radius: 1px;
 }
 
 .mel-searchbar-container-show-overflow {
-  width: calc(300px + 25vw);
+  width: calc(300px + 22vw);
   border-radius: 1px;
   overflow: visible;
 }

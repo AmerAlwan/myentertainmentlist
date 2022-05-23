@@ -12,7 +12,7 @@
 .search-add-media-list-dropdown .dropdown-menu {
     position: absolute !important;
     left: 50% !important;
-    transform: translate(-50%, 20%) !important;
+    transform: translate(-35%, 5%) !important;
     width: 50%;
     text-align: center;
     overflow-y: scroll !important;

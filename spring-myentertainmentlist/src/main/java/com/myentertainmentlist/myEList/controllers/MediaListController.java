@@ -19,6 +19,7 @@ import com.myentertainmentlist.myEList.repositories.media.TvRepository;
 import com.myentertainmentlist.myEList.repositories.medialist.MediaListRepository;
 import com.myentertainmentlist.myEList.security.jwt.JwtUtils;
 import com.myentertainmentlist.myEList.services.UserDetailsImpl;
+import org.bouncycastle.asn1.pkcs.MacData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,7 +110,7 @@ public class MediaListController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> createList(@RequestBody MediaListRequest mediaListRequest) {
         UserDetailsImpl userDetailsImpl = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        MediaList mediaList = new MediaList(mediaListRequest.getName(), mediaListRequest.getDescription(), mediaListRequest.getIsPrivate(), mediaListRequest.getMediaListType());
+        MediaList mediaList = new MediaList(mediaListRequest.getName(), mediaListRequest.getDescription(), mediaListRequest.getIsPrivate(), false, mediaListRequest.getMediaListType());
 
         Optional<MediaList> mediaListExists = mediaListRepository.findByNameAndUser_Id(mediaList.getName(), userDetailsImpl.getId());
 
@@ -121,7 +124,7 @@ public class MediaListController {
             newMediaList.setPosterName(posterName);
             mediaListRepository.save(mediaList);
         } else return new ResponseEntity<>(new MessageResponse("User not found!"), HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(new MediaListResponse(mediaList.getId(), mediaList.getName(), mediaList.getDescription(), mediaList.isPrivate(), mediaList.getMovies(), mediaList.getTvs(), mediaList.getGames()), HttpStatus.OK);
+        return new ResponseEntity<>(new MediaListResponse(mediaList.getId(), mediaList.getName(), mediaList.getDescription(), mediaList.isPrivate(), false, mediaList.getMovies(), mediaList.getTvs(), mediaList.getGames()), HttpStatus.OK);
     }
 
     @PostMapping("/lists/{id}/movie")
@@ -131,23 +134,26 @@ public class MediaListController {
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
         MediaList mediaList = mediaListExists.get();
+        Movie movie;
         Optional<Movie> movieExists = movieRepository.findByApiId(movieRequest.getApiId());
         if (movieExists.isPresent()) {
-            Movie movie = movieExists.get();
+            movie = movieExists.get();
             mediaList.getMovies().add(movie);
             mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(movie, HttpStatus.OK);
         } else {
-            Movie _movie = new Movie(movieRequest.getApiId(), movieRequest.getTitle(), movieRequest.getPosterPath(), movieRequest.getReleaseYear());
-            movieRepository.save(_movie);
-            Optional<Movie> movie = movieRepository.findByApiId(_movie.getApiId());
-            if (movie.isPresent()) {
-                mediaList.getMovies().add(movie.get());
-                mediaListRepository.save(mediaList);
-                return new ResponseEntity<>(movie, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            movie = new Movie(movieRequest.getApiId(), movieRequest.getTitle(), movieRequest.getPosterPath(), movieRequest.getPlayTime(), movieRequest.getReleaseYear());
+            movieRepository.save(movie);
+            mediaList.getMovies().add(movie);
+            mediaListRepository.save(mediaList);
         }
+        Optional<MediaList> _allMediaList = mediaListRepository.findByIsAllAndUser_Id(true, userId);
+        if (_allMediaList.isPresent()) {
+            MediaList allMediaList = _allMediaList.get();
+            allMediaList.addMovie(movie);
+            mediaListRepository.save(allMediaList);
+            return new ResponseEntity<>(movie, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/lists/{id}/tv")
@@ -157,23 +163,26 @@ public class MediaListController {
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
         MediaList mediaList = mediaListExists.get();
+        Tv tv;
         Optional<Tv> tvExists = tvRepository.findByApiId(tvRequest.getApiId());
         if (tvExists.isPresent()) {
-            Tv tv = tvExists.get();
+            tv = tvExists.get();
             mediaList.getTvs().add(tv);
             mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(tv, HttpStatus.OK);
         } else {
-            Tv _tv = new Tv(tvRequest.getApiId(), tvRequest.getTitle(), tvRequest.getPosterPath(), tvRequest.getReleaseYear());
-            tvRepository.save(_tv);
-            Optional<Tv> tv = tvRepository.findByApiId(_tv.getApiId());
-            if (tv.isPresent()) {
-                mediaList.getTvs().add(tv.get());
-                mediaListRepository.save(mediaList);
+            tv = new Tv(tvRequest.getApiId(), tvRequest.getTitle(), tvRequest.getPosterPath(), tvRequest.getPlayTime(), tvRequest.getReleaseYear());
+            tvRepository.save(tv);
+            mediaList.getTvs().add(tv);
+            mediaListRepository.save(mediaList);
+        }
+            Optional<MediaList> _allMediaList = mediaListRepository.findByIsAllAndUser_Id(true, userId);
+            if (_allMediaList.isPresent()) {
+                MediaList allMediaList = _allMediaList.get();
+                allMediaList.addTv(tv);
+                mediaListRepository.save(allMediaList);
                 return new ResponseEntity<>(tv, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }   
 
     @PostMapping("/lists/{id}/game")
@@ -183,23 +192,26 @@ public class MediaListController {
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
         MediaList mediaList = mediaListExists.get();
+        Game game;
         Optional<Game> gameExists = gameRepository.findByApiId(gameRequest.getApiId());
         if (gameExists.isPresent()) {
-            Game game = gameExists.get();
+            game = gameExists.get();
             mediaList.getGames().add(game);
             mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(game, HttpStatus.OK);
         } else {
-            Game _game = new Game(gameRequest.getApiId(), gameRequest.getTitle(), gameRequest.getPosterPath(), gameRequest.getReleaseYear());
-            gameRepository.save(_game);
-            Optional<Game> game = gameRepository.findByApiId(_game.getApiId());
-            if (game.isPresent()) {
-                mediaList.getGames().add(game.get());
-                mediaListRepository.save(mediaList);
-                return new ResponseEntity<>(game, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            game = new Game(gameRequest.getApiId(), gameRequest.getTitle(), gameRequest.getPosterPath(), gameRequest.getPlayTime(), gameRequest.getReleaseYear());
+            gameRepository.save(game);
+            mediaList.getGames().add(game);
+            mediaListRepository.save(mediaList);
         }
+        Optional<MediaList> _allMediaList = mediaListRepository.findByIsAllAndUser_Id(true, userId);
+        if (_allMediaList.isPresent()) {
+            MediaList allMediaList = _allMediaList.get();
+            allMediaList.addGame(game);
+            mediaListRepository.save(allMediaList);
+            return new ResponseEntity<>(game, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/lists/{id}")
@@ -214,51 +226,90 @@ public class MediaListController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteMovieFromList(@PathVariable("id") long id, @PathVariable("movie_id") long movie_id, Authentication authentication) {
         Long userId = getUserId(authentication);
+        List<MediaList> mediaLists = new ArrayList<>();
+
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
-        MediaList mediaList = mediaListExists.get();
+
         Optional<Movie> movieExists = movieRepository.findById(movie_id);
-        if (movieExists.isPresent()) {
-            Movie movie = movieExists.get();
-            mediaList.getMovies().remove(movie);
-            mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (!movieExists.isPresent()) return new ResponseEntity<>(new MessageResponse("Movie with id " + movie_id + " not found!"), HttpStatus.NOT_FOUND);
+
+        Movie movie = movieExists.get();
+
+        MediaList _mediaList = mediaListExists.get();
+
+        if (_mediaList.isAll()) {
+            mediaLists = mediaListRepository.findMedialistsByMovies_Id(movie_id);
+        } else {
+            mediaLists.add(_mediaList);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        mediaLists.forEach(mediaList -> {
+            mediaList.removeMovie(movie);
+            mediaListRepository.save(mediaList);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/lists/{id}/tv/{tv_id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteTvFromList(@PathVariable("id") long id, @PathVariable("tv_id") long tv_id, Authentication authentication) {
         Long userId = getUserId(authentication);
+        List<MediaList> mediaLists = new ArrayList<>();
+
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
-        MediaList mediaList = mediaListExists.get();
+
         Optional<Tv> tvExists = tvRepository.findById(tv_id);
-        if (tvExists.isPresent()) {
-            Tv tv = tvExists.get();
-            mediaList.getTvs().remove(tv);
-            mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (!tvExists.isPresent()) return new ResponseEntity<>(new MessageResponse("T with id " + tv_id + " not found!"), HttpStatus.NOT_FOUND);
+
+        Tv tv = tvExists.get();
+
+        MediaList _mediaList = mediaListExists.get();
+
+        if (_mediaList.isAll()) {
+            mediaLists = mediaListRepository.findMedialistsByTvs_Id(tv_id);
+        } else {
+            mediaLists.add(_mediaList);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        mediaLists.forEach(mediaList -> {
+            mediaList.removeTv(tv);
+            mediaListRepository.save(mediaList);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/lists/{id}/game/{game_id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteGameFromList(@PathVariable("id") long id, @PathVariable("game_id") long game_id, Authentication authentication) {
         Long userId = getUserId(authentication);
+        List<MediaList> mediaLists = new ArrayList<>();
+
         Optional<MediaList> mediaListExists = mediaListRepository.findByIdAndUser_Id(id, userId);
         if (!mediaListExists.isPresent()) return new ResponseEntity<>(new MessageResponse("List with id " + id + " not found!"), HttpStatus.NOT_FOUND);
-        MediaList mediaList = mediaListExists.get();
+
         Optional<Game> gameExists = gameRepository.findById(game_id);
-        if (gameExists.isPresent()) {
-            Game game = gameExists.get();
-            mediaList.getGames().remove(game);
-            mediaListRepository.save(mediaList);
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (!gameExists.isPresent()) return new ResponseEntity<>(new MessageResponse("Game with id " + game_id + " not found!"), HttpStatus.NOT_FOUND);
+
+        Game game = gameExists.get();
+
+        MediaList _mediaList = mediaListExists.get();
+
+        if (_mediaList.isAll()) {
+            mediaLists = mediaListRepository.findMedialistsByGames_Id(game_id);
+        } else {
+            mediaLists.add(_mediaList);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        mediaLists.forEach(mediaList -> {
+            mediaList.removeGame(game);
+            mediaListRepository.save(mediaList);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Long getUserId(Authentication authentication) {

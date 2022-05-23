@@ -22,6 +22,9 @@ public class Game {
     @Column(name = "poster_path")
     private String posterPath;
 
+    @Column(name = "play_time")
+    private int playTime;
+
     @Column(name = "release_year")
     private short releaseYear;
 
@@ -36,10 +39,11 @@ public class Game {
 
     public Game() {}
 
-    public Game(String apiId, String title, String posterPath, short releaseYear) {
+    public Game(String apiId, String title, String posterPath, int playTime, short releaseYear) {
         this.apiId = apiId;
         this.title = title;
         this.posterPath = posterPath;
+        this.playTime = playTime;
         this.releaseYear = releaseYear;
     }
 
@@ -67,6 +71,10 @@ public class Game {
         this.posterPath = posterPath;
     }
 
+    public void setPlayTime(int playTime) {
+        this.playTime = playTime;
+    }
+
     public long getId() {
         return id;
     }
@@ -89,5 +97,9 @@ public class Game {
 
     public String getPosterPath() {
         return posterPath;
+    }
+
+    public int getPlayTime() {
+        return playTime;
     }
 }

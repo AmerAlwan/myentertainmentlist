@@ -131,7 +131,7 @@ class SearchBar extends Component {
 //  //console.log(props)
         return (
             <>
-                <Col xs={12} md={6} lg={6}>
+                <Col xs={12} md={12} lg={6}>
                     <components.Group {...props}></components.Group>
                 </Col>
             </>

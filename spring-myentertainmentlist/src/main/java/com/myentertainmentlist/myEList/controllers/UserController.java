@@ -1,5 +1,6 @@
 package com.myentertainmentlist.myEList.controllers;
 
+import com.myentertainmentlist.myEList.enums.MediaListType;
 import com.myentertainmentlist.myEList.enums.UserRole;
 import com.myentertainmentlist.myEList.models.Role;
 import com.myentertainmentlist.myEList.models.User;
@@ -177,6 +178,13 @@ public class UserController {
 
             _user.setRoles(roles);
             userRepository.save(_user);
+
+            MediaList mediaList = new MediaList("All", "", true, true, MediaListType.MEDIA_ALL);
+            mediaList.setUser(_user);
+
+            String posterName = "default_poster.jpg";
+            mediaList.setPosterName(posterName);
+            mediaListRepository.save(mediaList);
 
             executor.execute(new Runnable() {
                 public void run() {

@@ -12,6 +12,7 @@ class Media extends Component {
     super(props);
     ////console.log(config.default.config.ids.genres);
     ////console.log(this.props.data.poster_path);
+    //console.log(this.props.data);
     let cConfig = config.default.config;
     this.state = {
        title: this.validateDefault(this.props.data.title, this.validate(this.props.data.name)),
@@ -20,6 +21,7 @@ class Media extends Component {
        genres: this.props.data.genre_ids ? this.props.data.genre_ids.map(g => cConfig.ids.tmdb.genres[g]).join(', ') : '',
        posterPath: this.props.data.poster_path ? `${cConfig.links.tmdb.image.link + cConfig.links.tmdb.image.size.w92 + this.props.data.poster_path}` : defaultposter,
        mediaType: this.validateAndInclude(this.validateDefault(this.validateReturn(this.validate(this.props.data.media_type) === "movie", "M", ""), this.validateReturn(this.validate(this.props.data.media_type) === "tv", "TV", "")), '', ' [', ']'),
+       playTime: this.props.data.media_type === 'movie' ? this.props.data.release_date : (this.props.data.episode_run_time && this.props.data.episode_run_time.length === 0 ? 0 : this.props.data.episode_run_time && this.props.data.episode_run_time.reduce((acc, curr) => acc + curr))
     };
 
 
@@ -66,6 +68,7 @@ class Media extends Component {
               apiId={this.props.data.id}
               title={this.state.title}
               releaseYear={this.state.date.replace("(", "").replace(")","")}
+              playTime={this.state.playTime}
               type={this.props.data.media_type}
               posterPath={this.props.data.poster_path ? `${config.default.config.links.tmdb.image.link + config.default.config.links.tmdb.image.size.poster.medium + this.props.data.poster_path}` : defaultposter}
           />

@@ -10,8 +10,8 @@ class Game extends Component {
     this.state = {
       name: this.validate(this.props.data.name),
       date: this.validateAndInclude(this.validate(this.props.data.released).split("-")[0], '', ' (', ')'),
-      image: this.validate(this.props.data.background_image)
-
+      image: this.validate(this.props.data.background_image),
+      playTime: this.props.data.play_time
     }
   }
 
@@ -28,8 +28,8 @@ class Game extends Component {
       <>
       <Row style={{height:'170px'}}>
         <Col xs={10}>
-          <span style={{fontSize:'0.8rem'}}>{this.state.name + this.state.date}</span>
-          <img style={{width: "217px", height: "122px"}} src={this.state.image}></img>
+          <Row><span style={{fontSize:'0.8rem'}}>{this.state.name + this.state.date}</span></Row>
+          <Row><img style={{width: "217px", height: "122px"}} src={this.state.image}></img></Row>
         </Col>
         <Col xs={2}>
           <SearchAddMediaToList
@@ -37,6 +37,7 @@ class Game extends Component {
               title={this.state.name}
               releaseYear={this.state.date.replace("(", "").replace(")","")}
               type='game'
+              playTime={this.state.playTime}
               posterPath={this.state.image}
           />
         </Col>

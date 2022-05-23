@@ -18,9 +18,9 @@ class Routes extends Component {
 
     render() {
         let isLoggedIn = this.props.isLoggedIn;
-        const userCookie = Cookies.get('user');
+        const userCookie = window.localStorage.getItem('user');
         if (isLoggedIn && !userCookie) {
-            Cookies.set('user', JSON.stringify(this.props.user));
+            window.localStorage.setItem('user', JSON.stringify(this.props.user));
         } else if (!isLoggedIn && userCookie) {
             this.props.toggleLoginSuccess(JSON.parse(userCookie));
             isLoggedIn = true;

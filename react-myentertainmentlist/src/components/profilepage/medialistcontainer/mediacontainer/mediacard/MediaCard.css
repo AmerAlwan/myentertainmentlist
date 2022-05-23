@@ -1,5 +1,6 @@
 .row {
     margin-left: unset !important;
+    margin-right: unset !important;
 }
 
 .card-media-back-image {
@@ -16,6 +17,8 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 1px 2px 0px, rgba(0, 0, 0, 0.77) 1px 3px 5px;
 }
 
 .card-media-type {
@@ -23,6 +26,10 @@
     font-size: 16px;
     top: 60%;
     transform: translateY(-50%);
+    margin-top: 12px !important;
+    margin-bottom: 5px !important;
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 1px 2px 0px, rgba(0, 0, 0, 0.77) 1px 3px 5px;
 }
 
 .card-media-description {
@@ -34,7 +41,7 @@
 
 .card-media-delete-icon {
     position: absolute;
-    top: 70%;
+    top: 75%;
     transform: translate(-5%, -50%);
     height: 24px;
     cursor: pointer;
@@ -48,5 +55,5 @@
 }
 
 .card-back-container {
-
+    cursor: pointer;
 }

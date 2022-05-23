@@ -1,7 +1,12 @@
 .add-media-list-dropdown .dropdown-toggle {
-    width: 50%;
+    width: 40%;
     color: black;
     border-radius: 20px;
+    margin-top: 20px;
+}
+
+.test {
+    color: rgb(122, 121, 121);
 }
 
 
@@ -12,8 +17,8 @@
 .add-media-list-dropdown .dropdown-menu {
     position: absolute !important;
     left: 50% !important;
-    transform: translate(-50%, 20%) !important;
-    width: 50%;
+    transform: translate(-50%, 40%) !important;
+    width: 40%;
     text-align: center;
     overflow-y: scroll !important;
 }

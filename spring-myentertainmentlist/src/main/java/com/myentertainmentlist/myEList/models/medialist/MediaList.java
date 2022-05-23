@@ -29,6 +29,9 @@ public class MediaList {
     @Column(name = "poster_name")
     private String posterName = "default_poster";
 
+    @Column(name = "is_all")
+    private boolean isAll = false;
+
     @Enumerated(EnumType.STRING)
     @Column(name="medialist_type", length = 20)
     private MediaListType mediaListType = MediaListType.MEDIA_ALL;
@@ -57,10 +60,11 @@ public class MediaList {
 
     public MediaList() {}
 
-    public MediaList(String name, String description, boolean isPrivate, MediaListType mediaListType) {
+    public MediaList(String name, String description, boolean isPrivate, boolean isAll, MediaListType mediaListType) {
         this.name = name;
         this.description = description;
         this.isPrivate = isPrivate;
+        this.isAll = isAll;
         this.mediaListType = mediaListType;
     }
 
@@ -100,6 +104,10 @@ public class MediaList {
         return isPrivate;
     }
 
+    public boolean isAll() {
+        return isAll;
+    }
+
     public MediaListType getMediaListType() {
         return mediaListType;
     }
@@ -110,6 +118,10 @@ public class MediaList {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setAll(boolean all) {
+        isAll = all;
     }
 
     public void setUser(User user) {
@@ -147,5 +159,25 @@ public class MediaList {
     public void addMovie(Movie movie) {
         this.movies.add(movie);
     }
+
+    public void addTv(Tv tv) {
+        this.tvs.add(tv);
+    }
+
+    public void addGame(Game game) {
+        this.games.add(game);
+    }
+
+    public void removeMovie(Movie movie) {
+        this.movies.remove(movie);
+    }
+
+    public void removeTv(Tv tv) {
+        this.tvs.remove(tv);
+    }
+    public void removeGame(Game game) {
+        this.games.remove(game);
+    }
+
 
 }

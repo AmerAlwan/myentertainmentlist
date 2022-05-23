@@ -1,56 +1,46 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {Row, Col} from 'react-bootstrap';
 import Logo from './Logo';
 import '../mediaCard.css';
 
-class MediaListCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            logos: this.getLogos(),
-            hasLogo: this.props.hasLogo,
-            title: this.props.title,
-            id: this.props.id
-        }
-    }
+export function MediaListCard(props) {
 
-    getLogos() {
-        console.table(this.props.list);
-        console.log(this.props.idValue);
-        return this.props.list.map((item, index) =>
-            <ul key={this.props.idValue ? item[this.props.idValue ? this.props.idValue : "id"] : index}>
+    const getLogos = () => {
+        if (!props.list) return [];
+        // console.table(this.props.list);
+        // console.log(this.props.idValue);
+        return props.list.map((item, index) =>
+            <ul key={props.idValue ? item[props.idValue ? props.idValue : "id"] : index}>
                 <li
-                    key={this.props.idValue ? item[this.props.idValue ? this.props.idValue : "id"] : index}
+                    key={props.idValue ? item[props.idValue ? props.idValue : "id"] : index}
                     style={{listStyle: "none"}}>
-                    <Logo path={item.logo_path} hasLogo={this.props.hasLogo}
-                          name={item[this.props.nameValue ? this.props.nameValue : "name"]}
+                    <Logo path={item.logo_path} hasLogo={props.hasLogo}
+                          name={item[props.nameValue ? props.nameValue : "name"]}
                           country={item.origin_country}/>
                 </li>
             </ul>
         )
     }
 
-    async componentDidUpdate(prevProps, prevState) {
-        if (this.props !== prevProps) {
-            this.setState({logos: this.getLogos(), title: this.props.title})
-        }
-    }
+    const [logos, setLogos] = useState(getLogos());
+    const [title, setTitle] = useState(props.title);
 
-    render() {
-        return (
-            <>
-                <div className="mediaCardBox" style={{maxWidth: "350px"}}>
-                    <Row>
-                        <Col xs={12}>
-                            <h3 className="mediaCardTitle">{this.state.title}</h3>
-                            {this.state.logos}
-                        </Col>
-                    </Row>
-                </div>
+    useEffect(() => {
+        setLogos(getLogos());
+        setTitle(props.title);
+    }, [props.list, props.idValue, props.nameValue, props.hasLogo, props.title, props.id])
 
-            </>
-        )
-    }
+    return (
+        <>
+            <div className="mediaCardBox" style={{maxWidth: "350px"}}>
+                <Row>
+                    <Col xs={12}>
+                        <h3 className="mediaCardTitle">{title}</h3>
+                        {logos}
+                    </Col>
+                </Row>
+            </div>
+
+        </>
+    )
 }
-
-export default MediaListCard;

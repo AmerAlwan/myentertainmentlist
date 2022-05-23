@@ -1,9 +1,9 @@
-    import React, {Component} from 'react';
+import React, {Component} from 'react';
 import {Row, Col, Image} from 'react-bootstrap';
 import {Circle} from 'react-circle';
 import * as config from '../config.json';
 import {search} from '../components/search/util.js';
-import MediaListCard from '../components/mediapage/companies/MediaListCard';
+import {MediaListCard} from '../components/mediapage/companies/MediaListCard';
 import {Link} from 'react-router-dom';
 import ImageGallery from 'react-image-gallery';
 import SearchBar from '../components/search/SearchBar'
@@ -13,13 +13,14 @@ import NavBar from "../components/navbar/AppNavBar";
 import AppNavBar from "../components/navbar/AppNavBar";
 import {setIsLoading, setNotLoading} from "../redux/slices/LoadingSlice";
 import {connect} from "react-redux";
-    import {AddMediaToList} from "../components/search/addmediatolist/AddMediaToList";
+import {AddMediaToList} from "../components/search/addmediatolist/AddMediaToList";
 
 const cardStyle = {};
 
 class MediaPage extends Component {
     constructor(props) {
         super(props);
+        this.handleScrollY = this.handleScrollY.bind(this);
         this.state = {
             title: "",
             images: [],
@@ -28,16 +29,22 @@ class MediaPage extends Component {
             spoken_languages: [],
             networks: [],
             genres: [],
-            info: []
+            info: [],
+            offsetY: 0
         }
     }
+
+    handleScrollY = () => {
+        this.setState({offsetY: window.scrollY});
+    }
+
 
     async setData(id, prevId, type) {
         if (id !== prevId) {
             this.props.toggleLoading();
             let msConfig, title, images, production_companies, production_countries, spoken_languages, networks,
                 description, poster_path, genres, vote_average, vote_count, popularity, platforms, stores, developers,
-                publishers, tags, release_date;
+                publishers, tags, release_date, play_time;
             let info = [];
             let imgConfig = config.default.config.links.tmdb.image;
             const [isMovie, isTv, isGame] = [type === "movie", type === "tv", type === "game"]
@@ -101,20 +108,28 @@ class MediaPage extends Component {
                     info.push({name: "Budget: " + (data.budget != 0 ? "$" + data.budget : "unknown")});
                     info.push({name: "Revenue: " + (data.revenue != 0 ? "$" + data.revenue : "unknown")});
                     release_date = data.release_date;
+                    play_time = data.runtime;
                 } else if (isTv) {
                     networks = data.networks;
                     networks.forEach(network => {
                         network.logo_path = `${imgConfig.link + imgConfig.size.logo.w45 + network.logo_path}`
                     });
-                    info.push({name: "First Air Date: " + data.first_air_date});
-                    info.push({name: "Last Air Date: " + data.last_air_date});
-                    info.push({name: "Avg. Ep. Runtime: " + (data.episode_run_time.length !== 0 ? (data.episode_run_time.reduce((acc, curr) => acc + curr) / data.episode_run_time.length) + "m" : 0)});
-                    info.push({name: "Total Seasons: " + data.number_of_seasons});
-                    info.push({name: "Total Episodes: " + data.number_of_episodes});
+
+                    let episode_run_time = data.episode_run_time;
+                    let episode_run_time_avg = (!episode_run_time || episode_run_time.length === 0 ? 0 : (episode_run_time.reduce((acc, curr) => acc + curr) / episode_run_time.length));
+                    let total_playtime = data.number_of_episodes && (episode_run_time_avg * data.number_of_episodes)
+
+                    info.push({name: "First Air Date: " + data.first_air_date || ""});
+                    info.push({name: "Last Air Date: " + data.last_air_date || ""});
+                    info.push({name: "Avg. Ep. Runtime: " + episode_run_time_avg + "m"});
+                    info.push({name: "Total Seasons: " + data.number_of_seasons || 0});
+                    info.push({name: "Total Episodes: " + data.number_of_episodes || 0});
+                    console.log(data);
                     release_date = data.first_air_date;
+                    play_time = total_playtime;
                 }
 
-              //  console.table(info);
+                //  console.table(info);
 
 
             } else if (isGame) {
@@ -183,15 +198,15 @@ class MediaPage extends Component {
                 vote_average = data.rating;
                 vote_count = data.ratings_count;
 
-                info.push({name: "Released: " + data.released});
-                info.push({name: "Metacritic: " + data.metacritic});
-                info.push({name: "Playtime: " + data.playtime + "h"});
-                info.push({name: "Achievements: " + data.achievements_count});
-                info.push({name: "Playtime: " + data.playtime});
+                info.push({name: "Released: " + data.released || ""});
+                info.push({name: "Metacritic: " + data.metacritic || ""});
+                info.push({name: "Playtime: " + (data.playtime || 0) + "h"});
+                info.push({name: "Achievements: " + data.achievements_count || 0});
 
                 release_date = data.released;
+                play_time = data.playtime * 60;
 
-               // console.table(info);
+                // console.table(info);
             }
 
             if (release_date) {
@@ -221,7 +236,8 @@ class MediaPage extends Component {
                 developers: developers,
                 publishers: publishers,
                 tags: tags,
-                release_date: release_date
+                release_date: release_date,
+                play_time: play_time
             })
             this.props.stopLoading();
         }
@@ -236,28 +252,32 @@ class MediaPage extends Component {
     }
 
     render() {
-        if (this.state.type === 'movie' || this.state.type === 'tv') {
+        if (this.state.type === 'movie' || this.state.type === 'tv' || this.state.type === 'game') {
             return (
                 <>
-                    <div style={{overflow: "hidden"}}>
-                        <NavBar showSearchBar showLogin/>
-                        <Row className="fixRowOutOfScreen">
-                            <Col xl={12} xs={12}>
-                                <ImageGallery
-                                    items={this.state.images}
-                                    lazyLoad
-                                    autoPlay
-                                    disableSwipe
-                                    showThumbnails={false}
-                                    showFullscreenButton={false}
-                                    showPlayButton={false}
-                                />
-                            </Col>
+                    <div style={{overflow: "hidden",
+                        backgroundColor: '#837960',
+                        backgroundImage: 'linear-gradient(to bottom, transparent, black 700px), url(' + (this.state.images ? this.state.images[0] ? this.state.images[0].original : '' : '') + ')',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundAttachment: 'fixed'
+
+                    }}>
+                        <NavBar showSearchBar showLogin position='relative'/>
+                        <Row className="fixRowOutOfScreen justify-content-center"
+                             style={{marginTop: "6rem", padding: "1rem"}}>
+                            <Image src={this.state.poster_path}
+                                   style={{
+                                       maxWidth: "60vh",
+                                       height: "auto",
+                                       boxShadow: '5px 5px 15px 5px rgba(0,0,0,0.22)'
+                            }}/>
                         </Row>
                         <Row>
                             <Col xs={12}>
                                 <h1 style={{
-                                    fontSize: "7rem",
+                                    fontSize: "10vh",
                                     color: "#dbdbdb",
                                     textAlign: "center",
                                     marginTop: this.state.images.length !== 0 ? "0" : "5rem"
@@ -272,30 +292,44 @@ class MediaPage extends Component {
                                     releaseYear={this.state.release_date}
                                     type={this.state.type}
                                     posterPath={this.state.poster_path}
+                                    playTime={this.state.play_time}
                                 />
                             </Col>
                         </Row>
-                        <Row className="fixRowOutOfScreen mediaCardBox"
-                             style={{margin: "2rem 1rem 0 1rem", padding: "1rem"}}>
-                            <Col xs={12} xl={4}>
-                                <Row>
-                                    <Col xs={12}>
-                                        <Image src={this.state.poster_path}
-                                               style={{maxWidth: "100%", height: "auto"}}/>
-                                    </Col>
+                        <Row style={{
+                            marginTop: '20px'
+                        }}>
+                            <Col xs={2} xl={2} />
+                            <Col xs={8} xl={8} className="mediaCardBox">
+                                <p className="mediaCardTitle">Summary</p>
+                                <p style={{
+                                    textAlign: "justify",
+                                    textAlignLast: "left"
+                                }}>{this.state.description}</p>
+                            </Col>
+                            <Col xs={2} xl={2}></Col>
+                        </Row>
+                        <Row className="" style={{
+                            marginTop: '20px'
+                        }}>
+                            <Col xs={0} md={1} xl={2} style={{
+                                paddingRight: '0 !important'
+                            }} />
+                            <Col className="" xs={12} md={5} xl={4} style={{
+                                paddingLeft: '0 !important'
+                            }}>
+                                <Row className='justify-content-xl-center justify-content-md-start justify-content-center'>
+                                    <MediaListCard title="Info" hasLogo={false} list={this.state.info}
+                                               style={cardStyle}/>
                                 </Row>
                             </Col>
-                            <Col xs={12} xl={4}>
-                                <Row>
-                                    <Col xs={11} xl={8}>
-                                        <MediaListCard title="Info" hasLogo={false} list={this.state.info}
-                                                       style={cardStyle}/>
-                                    </Col>
-                                    <Col className="mediaCardBox" xs={6} xl={3}
-                                         style={{minHeight: "1rem", marginTop: "1rem"}}>
+                            <Col xs={12} md={5} xl={4} style={{maxWidth: '638px', paddingLeft: '0'}}>
+                                <Row className="justify-content-center justify-content-xl-center justify-content-md-end">
+                                    <Col className="mediaCardBox justify-content-center" xs={6} xl={4}
+                                         style={{minHeight: "1rem", marginTop: "1rem", maxWidth: '300px !important', textAlign: 'center'}}>
                                         <p className="mediaCardTitle">Rating</p>
                                         <div style={{marginTop: "0.5rem"}}>
-                                            <Circle size="85" progress={this.state.vote_average * 10}/>
+                                            <Circle size="85" progress={Math.round(this.state.vote_average) * 10}/>
                                         </div>
                                         <hr/>
                                         <p className="mediaCardTitle">Vote Count</p>
@@ -307,41 +341,95 @@ class MediaPage extends Component {
                                         <p className="mediaCardTitle">Popularity</p>
                                         <p style={{margin: "0 0.5rem"}}>{this.state.popularity}</p>
                                     </Col>
-                                    <Col xl={1}></Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={11} xl={11} className="mediaCardBox">
-                                        <p className="mediaCardTitle">Summary</p>
-                                        <p style={{
-                                            textAlign: "justify",
-                                            textAlignLast: "center",
-                                            color: "grey"
-                                        }}>{this.state.description}</p>
-                                    </Col>
-                                    <Col xs={1} xl={1}></Col>
                                 </Row>
                             </Col>
-                            <Col xs={12} xl={4}>
-                                <MediaListCard title="Genres" id="genres1" hasLogo={false} list={this.state.genres}
+                            <Col xs={0} md={1} xl={2}></Col>
+                        </Row>
+
+                        <Row className="fixRowOutOfScreen"
+                             style={{margin: "2rem 1rem 0 1rem", padding: "1rem"}}>
+                            {/* <Col xs={12} xl={4}>
+                                <Row>
+                                    <Col xs={12}>
+                                        <Image src={this.state.poster_path}
+                                               style={{maxWidth: "100%", height: "auto"}}/>
+                                    </Col>
+                                </Row>
+                            </Col> */}
+                            <Col xs={12} xl={12}>
+                                <Row>
+                                {(this.state.type === "movie" || this.state.type === "tv") &&
+                                    <Col>
+                                        <MediaListCard title="Genres" id="genres1" hasLogo={false} list={this.state.genres}
                                                style={cardStyle}/>
-                                <MediaListCard title="Production Companies" id="production_companies" hasLogo
+                                    </Col>}
+                                {(this.state.type === "movie" || this.state.type === "tv") &&
+                                    <Col>
+                                        <MediaListCard title="Production Companies" id="production_companies" hasLogo
                                                list={this.state.production_companies}/>
-                                <MediaListCard title="Production Countries" id="production_countries" hasLogo
+                                    </Col>}
+                                {(this.state.type === "movie" || this.state.type === "tv") &&
+                                    <Col>
+                                        <MediaListCard title="Production Countries" id="production_countries" hasLogo
                                                list={this.state.production_countries}
                                                idValue="iso_3166_1" style={cardStyle}/>
-                                <MediaListCard title="Spoken Languages" id="spoken_languages" hasLogo={false}
+                                    </Col>}
+                                {(this.state.type === "movie" || this.state.type === "tv") &&
+                                    <Col>
+                                        <MediaListCard title="Spoken Languages" id="spoken_languages" hasLogo={false}
                                                list={this.state.spoken_languages}
                                                idValue="iso_639_1" nameValue="english_name" style={cardStyle}/>
-                                {this.state.type === "tv" ?
-                                    <MediaListCard title="Networks" id="networks" hasLogo list={this.state.networks}
-                                                   style={cardStyle}/> : ""}
-
+                                    </Col>}
+                                {this.state.type === "tv" &&
+                                    <Col>
+                                        <MediaListCard title="Networks" id="networks" hasLogo list={this.state.networks}
+                                                   style={cardStyle}/>
+                                    </Col>}
+                                {this.state.type === "game" &&
+                                    <Col>
+                                        <MediaListCard title="Genres" id="genres2" hasLogo list={this.state.genres}
+                                               style={cardStyle}/>
+                                    </Col>}
+                                {this.state.type === "game" &&
+                                    <Col>
+                                        <MediaListCard title="Developers" id="developers" hasLogo list={this.state.developers}
+                                               style={cardStyle}/>
+                                    </Col>}
+                                {this.state.type === "game" &&
+                                    <Col>
+                                        <MediaListCard title="Publishers" id="publishers" hasLogo list={this.state.publishers}
+                                               style={cardStyle}/>
+                                    </Col>}
+                                {this.state.type === "game" &&
+                                    <Col>
+                                        <MediaListCard title="Tags" id="tags" hasLogo list={this.state.tags} style={cardStyle}/>
+                                    </Col>}
+                                </Row>
                             </Col>
                         </Row>
+                        <Row className="fixRowOutOfScreen justify-content-center">
+                            <Col xl={6} xs={12}>
+                                <ImageGallery
+                                    items={this.state.images}
+                                    lazyLoad
+                                    autoPlay={false}
+                                    disableSwipe
+                                    showThumbnails={false}
+                                    showFullscreenButton={false}
+                                    showPlayButton={false}
+                                    showIndex
+                                />
+                            </Col>
+                        </Row>
+                        <div style={{
+                            height: '100px',
+                            backgroundColor: 'transparent'
+                        }}>
+                        </div>
                     </div>
                 </>
             )
-        } else if (this.state.type === 'game') {
+        } /* else if (this.state.type === 'game') {
             return (
                 <>
                     <div style={{overflow: "hidden"}}>
@@ -447,7 +535,7 @@ class MediaPage extends Component {
                     </div>
                 </>
             )
-        } else if (this.state.type === "error") {
+        } */ else if (this.state.type === "error") {
             return (<><h1>Not Found!</h1></>)
         } else {
             return (<></>)

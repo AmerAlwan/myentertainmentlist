@@ -2,7 +2,8 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import Select from "react-select";
 import MedialistService from "../../../backend/medialist.service";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setMediaLists} from "../../../../redux/slices/UserSlice";
 
 const getMedialistType = type => (type === 'MEDIA_MOVIE' && 'movie') || (type === 'MEDIA_TV' && 'tv') || (type === 'MEDIA_GAME' && 'game') || 'all';
 
@@ -14,17 +15,21 @@ export function AddMediaList(props) {
 
     const accessToken = useSelector(state => state.user.accessToken);
 
+    const dispatch = useDispatch();
+
     const allMediaTypes = ['MEDIA_ALL', 'MEDIA_MOVIE', 'MEDIA_TV', 'MEDIA_GAME'];
 
     const saveMediaList = () => {
         const mediaList = {name: mediaListName, description: mediaListDescription, mediaListType: mediaListType, isPrivate: isPrivate};
         MedialistService.addMediaList(mediaList, accessToken).then(response => {
-            props.setResetMediaList(true);
             setMediaListName("");
             setMediaListDescription("");
             setIsPrivate(false);
             setMediaListType("");
             console.log(response);
+            MedialistService.getLists(accessToken).then(response =>
+                response && response.status === 200 && response.data && dispatch((setMediaLists(response.data)))
+            );
         });
     }
 
