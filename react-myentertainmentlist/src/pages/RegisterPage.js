@@ -75,7 +75,7 @@ class RegisterPage extends Component {
                         this.state.isAccountCreated ?
                             ( <Row style={{margin: "1rem 0"}}>
                                 <Col>
-                                    <Alert variant="success">Account successfully created! We have sent you an email to verfiy your account.</Alert>
+                                    <Alert variant="success">Account successfully created!</Alert>
                                 </Col>
                             </Row> ) :
                             ""

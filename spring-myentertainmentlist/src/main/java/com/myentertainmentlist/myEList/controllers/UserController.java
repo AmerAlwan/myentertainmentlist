@@ -159,32 +159,49 @@ public class UserController {
     @PostMapping("/users/register")
     public ResponseEntity<?> createUser(@RequestBody RegisterRequest registerRequest) {
         try {
-
+            System.out.println("IN");
             if (userRepository.existsByEmail(registerRequest.getEmail())) {
                 return new ResponseEntity<>(new MessageResponse("Email is already taken!"), HttpStatus.BAD_REQUEST);
             }
+
+            System.out.println("After Email");
+
 
             if (userRepository.existsByUsername(registerRequest.getUsername())) {
                 return new ResponseEntity<>(new MessageResponse("Username is already taken!"), HttpStatus.BAD_REQUEST);
             }
 
+            System.out.println("After Username");
+
             User _user = new User(registerRequest.getFirstName(), registerRequest.getLastName(), registerRequest.getUsername(), registerRequest.getEmail(), passwordEncoder.encode(registerRequest.getPassword()));
+
+            System.out.println("Created User");
+
             Set<Role> roles = new HashSet<>();
 
             Role userRole = roleRepository.findByName(UserRole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Role not Found!"));
 
+            System.out.println("Gotten Role");
+
             roles.add(userRole);
 
             _user.setRoles(roles);
+
             userRepository.save(_user);
+
+            System.out.println("User Repository");
 
             MediaList mediaList = new MediaList("All", "", true, true, MediaListType.MEDIA_ALL);
             mediaList.setUser(_user);
 
+            System.out.println("Created Medialist");
+
             String posterName = "default_poster.jpg";
             mediaList.setPosterName(posterName);
             mediaListRepository.save(mediaList);
+
+            System.out.println("Saved MediaList");
 
             executor.execute(new Runnable() {
                 public void run() {
